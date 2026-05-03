@@ -5,6 +5,7 @@ import 'package:uuid/uuid.dart';
 import '../models/destination.dart';
 import '../models/trip.dart';
 import '../models/tracking_state.dart';
+import '../engines/background_engine.dart';
 import '../engines/location_engine.dart';
 import '../engines/distance_engine.dart';
 import '../engines/geofence_engine.dart';
@@ -48,17 +49,17 @@ class TripProvider extends ChangeNotifier {
 
   Future<void> initialize() async {
     await _notificationEngine.initialize();
-    _loadData();
+    await _loadData();
   }
 
-  void _loadData() {
+  Future<void> _loadData() async {
     _tripHistory = StorageService.getTrips();
     _activeTrip = StorageService.getActiveTrip();
     _resetAlertMilestones();
 
     if (_activeTrip != null) {
       // Resume tracking if there's an active trip
-      _startTrackingInternal();
+      await _startTrackingInternal();
     }
 
     notifyListeners();
@@ -89,13 +90,17 @@ class TripProvider extends ChangeNotifier {
     await StorageService.saveTrip(_activeTrip!);
     _tripHistory = StorageService.getTrips();
     _resetAlertMilestones();
-    _startTrackingInternal();
+    await _startTrackingInternal();
     notifyListeners();
     return true;
   }
 
-  void _startTrackingInternal() {
+  Future<void> _startTrackingInternal() async {
     if (_activeTrip == null) return;
+
+    if (!await BackgroundEngine.isRunning()) {
+      await BackgroundEngine.start();
+    }
 
     final destLatLng = LatLng(
       _activeTrip!.destLatitude,
@@ -243,6 +248,9 @@ class TripProvider extends ChangeNotifier {
     _geofenceEngine.reset();
     _travelDetectionEngine.reset();
     await _notificationEngine.cancelAll();
+    if (await BackgroundEngine.isRunning()) {
+      await BackgroundEngine.stop();
+    }
 
     _activeTrip = null;
     _trackingData = const TrackingData();
