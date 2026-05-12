@@ -22,6 +22,8 @@ class TripProvider extends ChangeNotifier {
   final NotificationEngine _notificationEngine = NotificationEngine();
   final _uuid = const Uuid();
 
+  Future<void>? _initFuture;
+
   Trip? _activeTrip;
   TrackingData _trackingData = const TrackingData();
   List<Trip> _tripHistory = [];
@@ -47,9 +49,18 @@ class TripProvider extends ChangeNotifier {
   }
   bool get isTracking => _activeTrip != null;
 
-  Future<void> initialize() async {
+  Future<void> initialize() {
+    _initFuture ??= _initializeInternal();
+    return _initFuture!;
+  }
+
+  Future<void> _initializeInternal() async {
     await _notificationEngine.initialize();
     await _loadData();
+  }
+
+  Future<void> _ensureInitialized() async {
+    await (_initFuture ??= _initializeInternal());
   }
 
   Future<void> _loadData() async {
@@ -59,7 +70,13 @@ class TripProvider extends ChangeNotifier {
 
     if (_activeTrip != null) {
       // Resume tracking if there's an active trip
-      await _startTrackingInternal();
+      try {
+        await _startTrackingInternal();
+      } catch (e) {
+        debugPrint('TripProvider: resume tracking failed: $e');
+        _activeTrip = null;
+        _trackingData = const TrackingData();
+      }
     }
 
     notifyListeners();
@@ -71,6 +88,7 @@ class TripProvider extends ChangeNotifier {
 
   Future<bool> startTrip(Destination destination,
       {bool replaceActive = true}) async {
+    await _ensureInitialized();
     if (replaceActive && _activeTrip != null) {
       await stopTrip(cancel: true);
     }
@@ -90,16 +108,37 @@ class TripProvider extends ChangeNotifier {
     await StorageService.saveTrip(_activeTrip!);
     _tripHistory = StorageService.getTrips();
     _resetAlertMilestones();
-    await _startTrackingInternal();
+    try {
+      await _startTrackingInternal();
+    } catch (e) {
+      debugPrint('TripProvider: start tracking failed: $e');
+      await _rollbackStartTrip();
+      notifyListeners();
+      return false;
+    }
     notifyListeners();
     return true;
+  }
+
+  Future<void> _rollbackStartTrip() async {
+    final trip = _activeTrip;
+    if (trip == null) return;
+    await StorageService.deleteTrip(trip.id);
+    _activeTrip = null;
+    _trackingData = const TrackingData();
+    _tripHistory = StorageService.getTrips();
+    _resetAlertMilestones();
   }
 
   Future<void> _startTrackingInternal() async {
     if (_activeTrip == null) return;
 
-    if (!await BackgroundEngine.isRunning()) {
-      await BackgroundEngine.start();
+    try {
+      if (!await BackgroundEngine.isRunning()) {
+        await BackgroundEngine.start();
+      }
+    } catch (e) {
+      debugPrint('TripProvider: background service start failed: $e');
     }
 
     final destLatLng = LatLng(
@@ -271,6 +310,7 @@ class TripProvider extends ChangeNotifier {
 
   /// Get current location for map display
   Future<LatLng?> getCurrentLocation() async {
+    await _ensureInitialized();
     final hasPermission = await _locationEngine.checkPermissions();
     if (!hasPermission) return null;
     return await _locationEngine.getCurrentPosition();

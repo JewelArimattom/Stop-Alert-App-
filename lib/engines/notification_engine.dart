@@ -1,4 +1,6 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:vibration/vibration.dart';
 import '../models/tracking_state.dart';
 import '../utils/constants.dart';
@@ -28,10 +30,22 @@ class NotificationEngine {
       enableVibration: true,
     );
 
-    await _notifications
+    final androidPlugin = _notifications
         .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>()
-        ?.createNotificationChannel(channel);
+            AndroidFlutterLocalNotificationsPlugin>();
+    await androidPlugin?.createNotificationChannel(channel);
+
+    const trackingChannel = AndroidNotificationChannel(
+      'stop_alert_tracking',
+      'Tracking Service',
+      description: 'Shows tracking status',
+      importance: Importance.low,
+    );
+    await androidPlugin?.createNotificationChannel(trackingChannel);
+
+    if (await Permission.notification.isDenied) {
+      await Permission.notification.request();
+    }
   }
 
   /// Handle alert level changes and trigger appropriate notifications
@@ -82,13 +96,16 @@ class NotificationEngine {
       category: AndroidNotificationCategory.service,
       icon: '@mipmap/ic_launcher',
     );
-
-    await _notifications.show(
-      NotificationIds.trackingService,
-      '🚆 Tracking: $destination',
-      '${_formatDistance(distance)} remaining',
-      const NotificationDetails(android: androidDetails),
-    );
+    try {
+      await _notifications.show(
+        NotificationIds.trackingService,
+        '🚆 Tracking: $destination',
+        '${_formatDistance(distance)} remaining',
+        const NotificationDetails(android: androidDetails),
+      );
+    } catch (e) {
+      debugPrint('NotificationEngine: tracking notification failed: $e');
+    }
   }
 
   Future<void> triggerMilestoneAlarm({
@@ -139,13 +156,16 @@ class NotificationEngine {
       fullScreenIntent: true,
       icon: '@mipmap/ic_launcher',
     );
-
-    await _notifications.show(
-      notificationId,
-      title,
-      body,
-      const NotificationDetails(android: androidDetails),
-    );
+    try {
+      await _notifications.show(
+        notificationId,
+        title,
+        body,
+        const NotificationDetails(android: androidDetails),
+      );
+    } catch (e) {
+      debugPrint('NotificationEngine: notification failed: $e');
+    }
   }
 
   Future<void> _vibrate() async {
