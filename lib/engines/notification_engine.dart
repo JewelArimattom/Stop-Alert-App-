@@ -14,7 +14,7 @@ class NotificationEngine {
 
   bool get isAlarmRinging => _audioService.isPlaying;
 
-  Future<void> initialize() async {
+  Future<void> initialize({bool requestPermissions = true}) async {
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidSettings);
@@ -43,7 +43,7 @@ class NotificationEngine {
     );
     await androidPlugin?.createNotificationChannel(trackingChannel);
 
-    if (await Permission.notification.isDenied) {
+    if (requestPermissions && await Permission.notification.isDenied) {
       await Permission.notification.request();
     }
   }

@@ -28,6 +28,7 @@ class TripProvider extends ChangeNotifier {
   TrackingData _trackingData = const TrackingData();
   List<Trip> _tripHistory = [];
   bool _isAlarmRinging = false;
+  bool _backgroundAlertsActive = false;
 
   bool _triggeredOneKmAlarm = false;
   bool _triggeredThreeHundredAlarm = false;
@@ -137,8 +138,17 @@ class TripProvider extends ChangeNotifier {
       if (!await BackgroundEngine.isRunning()) {
         await BackgroundEngine.start();
       }
+      _backgroundAlertsActive = await BackgroundEngine.isRunning();
+      if (_backgroundAlertsActive) {
+        BackgroundEngine.sendData({
+          'destinationName': _activeTrip!.destinationName,
+          'destLatitude': _activeTrip!.destLatitude,
+          'destLongitude': _activeTrip!.destLongitude,
+        });
+      }
     } catch (e) {
       debugPrint('TripProvider: background service start failed: $e');
+      _backgroundAlertsActive = false;
     }
 
     final destLatLng = LatLng(
@@ -227,41 +237,57 @@ class TripProvider extends ChangeNotifier {
 
   Future<void> _handleDistanceMilestones(double distanceMeters) async {
     if (_activeTrip == null) return;
+    if (_backgroundAlertsActive) {
+      final stillRunning = await BackgroundEngine.isRunning();
+      if (!stillRunning) {
+        _backgroundAlertsActive = false;
+      }
+    }
+    final useBackgroundAlerts = _backgroundAlertsActive;
 
     if (!_triggeredOneKmAlarm && distanceMeters <= 1000) {
       _triggeredOneKmAlarm = true;
       _isAlarmRinging = true;
-      await _notificationEngine.triggerMilestoneAlarm(
-        title: '1 km remaining',
-        body: 'Only ${distanceMeters.toInt()} m to ${_activeTrip!.destinationName}.',
-        notificationId: NotificationIds.soundAlert,
-      );
+      if (!useBackgroundAlerts) {
+        await _notificationEngine.triggerMilestoneAlarm(
+          title: '1 km remaining',
+          body: 'Only ${distanceMeters.toInt()} m to ${_activeTrip!.destinationName}.',
+          notificationId: NotificationIds.soundAlert,
+        );
+      }
       notifyListeners();
     }
 
     if (!_triggeredThreeHundredAlarm && distanceMeters <= 300) {
       _triggeredThreeHundredAlarm = true;
       _isAlarmRinging = true;
-      await _notificationEngine.triggerMilestoneAlarm(
-        title: '300 m remaining',
-        body: 'Very close to ${_activeTrip!.destinationName}.',
-        notificationId: NotificationIds.alarmAlert,
-      );
+      if (!useBackgroundAlerts) {
+        await _notificationEngine.triggerMilestoneAlarm(
+          title: '300 m remaining',
+          body: 'Very close to ${_activeTrip!.destinationName}.',
+          notificationId: NotificationIds.alarmAlert,
+        );
+      }
       notifyListeners();
     }
 
     if (!_triggeredArrivalNotice && distanceMeters <= DistanceThresholds.veryClose) {
       _triggeredArrivalNotice = true;
       _isAlarmRinging = false;
-      await _notificationEngine.showArrivalNotification(
-        destinationName: _activeTrip!.destinationName,
-      );
+      if (!useBackgroundAlerts) {
+        await _notificationEngine.showArrivalNotification(
+          destinationName: _activeTrip!.destinationName,
+        );
+      }
       notifyListeners();
     }
   }
 
   Future<void> dismissAlarm() async {
     await _notificationEngine.stopAlarmAudio();
+    if (_backgroundAlertsActive) {
+      await BackgroundEngine.stopAlarm();
+    }
     _isAlarmRinging = false;
     notifyListeners();
   }
@@ -290,6 +316,7 @@ class TripProvider extends ChangeNotifier {
     if (await BackgroundEngine.isRunning()) {
       await BackgroundEngine.stop();
     }
+    _backgroundAlertsActive = false;
 
     _activeTrip = null;
     _trackingData = const TrackingData();

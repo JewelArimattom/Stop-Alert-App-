@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../utils/constants.dart';
+import '../services/map_cache_service.dart';
 
 class MapWidget extends StatelessWidget {
   final MapController? controller;
@@ -27,6 +28,7 @@ class MapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final tileProvider = MapCacheService.tileProvider;
     return ClipRRect(
       borderRadius: BorderRadius.circular(0),
       child: FlutterMap(
@@ -44,6 +46,7 @@ class MapWidget extends StatelessWidget {
             urlTemplate:
                 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.stopalert.app',
+            tileProvider: tileProvider,
           ),
 
           // Dark overlay for better contrast
@@ -56,6 +59,7 @@ class MapWidget extends StatelessWidget {
               urlTemplate:
                   'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
               userAgentPackageName: 'com.stopalert.app',
+              tileProvider: tileProvider,
               tileBuilder: (context, tileWidget, tile) {
                 return ColorFiltered(
                   colorFilter: const ColorFilter.matrix(<double>[
