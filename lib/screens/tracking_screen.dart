@@ -338,7 +338,7 @@ class _TrackingScreenState extends State<TrackingScreen>
     if (!success && mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
-          content: const Text('Location permission required'),
+          content: const Text('Background location permission required'),
           backgroundColor: AppColors.danger,
           behavior: SnackBarBehavior.floating,
           shape:

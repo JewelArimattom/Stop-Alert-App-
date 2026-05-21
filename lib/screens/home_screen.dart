@@ -115,17 +115,17 @@ class _HomeScreenState extends State<HomeScreen>
   void _startQuickTrip(Destination destination) async {
     final provider = context.read<TripProvider>();
     final success = await provider.startTrip(destination);
-    if (success && mounted) {
-      _navigateToTracking();
-    } else if (mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: const Text('Location permission required'),
-          backgroundColor: AppColors.danger,
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        ),
-      );
+      if (success && mounted) {
+        _navigateToTracking();
+      } else if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: const Text('Background location permission required'),
+            backgroundColor: AppColors.danger,
+            behavior: SnackBarBehavior.floating,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+          ),
+        );
     }
   }
 

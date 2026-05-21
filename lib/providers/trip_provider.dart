@@ -94,7 +94,8 @@ class TripProvider extends ChangeNotifier {
       await stopTrip(cancel: true);
     }
 
-    final hasPermission = await _locationEngine.checkPermissions();
+    final hasPermission =
+        await _locationEngine.checkPermissions(requestBackground: true);
     if (!hasPermission) return false;
 
     // Create trip

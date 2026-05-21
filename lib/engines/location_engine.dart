@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:geolocator/geolocator.dart';
 import 'package:latlong2/latlong.dart';
+import 'package:permission_handler/permission_handler.dart';
 import '../models/tracking_state.dart';
 import '../utils/constants.dart';
 
@@ -19,7 +20,7 @@ class LocationEngine {
   bool get isIdle => _isIdle;
 
   /// Check and request location permissions
-  Future<bool> checkPermissions() async {
+  Future<bool> checkPermissions({bool requestBackground = false}) async {
     bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) return false;
 
@@ -29,7 +30,26 @@ class LocationEngine {
       if (permission == LocationPermission.denied) return false;
     }
     if (permission == LocationPermission.deniedForever) return false;
+    if (requestBackground) {
+      final backgroundGranted =
+          await _requestBackgroundLocationPermission(permission);
+      if (!backgroundGranted) return false;
+    }
     return true;
+  }
+
+  Future<bool> _requestBackgroundLocationPermission(
+      LocationPermission foregroundPermission) async {
+    if (foregroundPermission == LocationPermission.always) return true;
+
+    final status = await Permission.locationAlways.status;
+    if (status.isGranted) return true;
+
+    final result = await Permission.locationAlways.request();
+    if (result.isGranted) return true;
+
+    final updatedPermission = await Geolocator.checkPermission();
+    return updatedPermission == LocationPermission.always;
   }
 
   /// Get current position once
@@ -46,8 +66,7 @@ class LocationEngine {
       try {
         final lastKnown = await Geolocator.getLastKnownPosition();
         if (lastKnown == null) return null;
-        final latLng =
-            LatLng(lastKnown.latitude, lastKnown.longitude);
+        final latLng = LatLng(lastKnown.latitude, lastKnown.longitude);
         _lastPosition = latLng;
         return latLng;
       } catch (_) {

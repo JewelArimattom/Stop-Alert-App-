@@ -25,6 +25,7 @@ class BackgroundEngine {
         initialNotificationTitle: '🚆 StopAlert',
         initialNotificationContent: 'Ready to track your destination',
         foregroundServiceNotificationId: 1,
+        foregroundServiceTypes: [AndroidForegroundType.location],
       ),
       iosConfiguration: IosConfiguration(
         autoStart: false,
@@ -68,6 +69,7 @@ class BackgroundEngine {
     await tracker.initialize();
 
     if (service is AndroidServiceInstance) {
+      service.setAsForegroundService();
       service.on('setAsForeground').listen((event) {
         service.setAsForegroundService();
       });
@@ -199,8 +201,7 @@ class _BackgroundTracker {
   Future<void> _updateForegroundNotification(double distance) async {
     if (_destinationName.isEmpty) return;
     if (_service is AndroidServiceInstance) {
-      final androidService = _service as AndroidServiceInstance;
-      await androidService.setForegroundNotificationInfo(
+      await _service.setForegroundNotificationInfo(
         title: '🚆 Tracking: $_destinationName',
         content: '${_formatDistance(distance)} remaining',
       );
