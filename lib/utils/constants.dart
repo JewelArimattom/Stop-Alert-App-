@@ -41,13 +41,17 @@ class BatteryConfig {
   static const double minMovementMeters = 10;
 }
 
-// ─── UI Constants ───────────────────────────────────────────────
+// ─── UI Constants — Clean White Theme ───────────────────────────
 class AppColors {
-  // Primary palette
-  static const Color background = Color(0xFF0A0E21);
-  static const Color surface = Color(0xFF1A1F36);
-  static const Color surfaceLight = Color(0xFF252A42);
-  static const Color card = Color(0xFF1E2340);
+  // Primary palette — clean white
+  static const Color background = Color(0xFFFFFFFF);
+  static const Color surface = Color(0xFFF7F8FA);
+  static const Color surfaceLight = Color(0xFFEEF0F4);
+  static const Color card = Color(0xFFFFFFFF);
+
+  // Borders & dividers
+  static const Color border = Color(0xFFE5E7EB);
+  static const Color borderLight = Color(0xFFF0F1F4);
 
   // Accent colors
   static const Color primary = Color(0xFF00D68F);
@@ -59,10 +63,10 @@ class AppColors {
   static const Color danger = Color(0xFFFF3D71);
   static const Color info = Color(0xFF0095FF);
 
-  // Text
-  static const Color textPrimary = Color(0xFFFFFFFF);
-  static const Color textSecondary = Color(0xFFB0B8D1);
-  static const Color textMuted = Color(0xFF6B7394);
+  // Text — dark on white
+  static const Color textPrimary = Color(0xFF111827);
+  static const Color textSecondary = Color(0xFF6B7280);
+  static const Color textMuted = Color(0xFF9CA3AF);
 
   // Gradients
   static const LinearGradient primaryGradient = LinearGradient(
@@ -84,7 +88,7 @@ class AppColors {
   );
 
   static const LinearGradient backgroundGradient = LinearGradient(
-    colors: [Color(0xFF0A0E21), Color(0xFF141832)],
+    colors: [Color(0xFFFFFFFF), Color(0xFFF7F8FA)],
     begin: Alignment.topCenter,
     end: Alignment.bottomCenter,
   );

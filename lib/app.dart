@@ -10,7 +10,7 @@ class StopAlertApp extends StatelessWidget {
     return MaterialApp(
       title: 'StopAlert Premium',
       debugShowCheckedModeBanner: false,
-      theme: AppTheme.darkTheme,
+      theme: AppTheme.lightTheme,
       home: const HomeScreen(),
     );
   }

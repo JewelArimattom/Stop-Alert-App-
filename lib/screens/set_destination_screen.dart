@@ -159,108 +159,105 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Stack(
-            children: [
-              // Full screen map
-              Positioned.fill(
-                child: ClipRRect(
-                  child: MapWidget(
-                    controller: _mapController,
-                    center: widget.currentPosition,
-                    currentPosition: widget.currentPosition,
-                    destination: _selectedPosition,
-                    geofenceRadius: _selectedPosition != null ? _radius : null,
-                    zoom: widget.currentPosition != null ? 14 : 5,
-                    onTap: _onMapTap,
-                  ),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Stack(
+          children: [
+            // Full screen map
+            Positioned.fill(
+              child: ClipRRect(
+                child: MapWidget(
+                  controller: _mapController,
+                  center: widget.currentPosition,
+                  currentPosition: widget.currentPosition,
+                  destination: _selectedPosition,
+                  geofenceRadius: _selectedPosition != null ? _radius : null,
+                  zoom: widget.currentPosition != null ? 14 : 5,
+                  onTap: _onMapTap,
                 ),
               ),
+            ),
 
-              // Search bar
+            // Search bar
+            Positioned(
+              top: 70,
+              left: 16,
+              right: 16,
+              child: _buildSearchBar(),
+            ),
+
+            if (_searchResults.isNotEmpty)
               Positioned(
-                top: 70,
+                top: 126,
                 left: 16,
                 right: 16,
-                child: _buildSearchBar(),
+                child: _buildSearchResults(),
               ),
 
-              if (_searchResults.isNotEmpty)
-                Positioned(
-                  top: 126,
-                  left: 16,
-                  right: 16,
-                  child: _buildSearchResults(),
-                ),
+            // Top bar
+            Positioned(
+              top: 0,
+              left: 0,
+              right: 0,
+              child: _buildTopBar(),
+            ),
 
-              // Top bar
+            Positioned(
+              right: 16,
+              bottom: _showDetails ? 240 : 16,
+              child: _buildRecenterButton(),
+            ),
+
+            // Instruction chip
+            if (_selectedPosition == null)
               Positioned(
-                top: 0,
+                top: 190,
                 left: 0,
                 right: 0,
-                child: _buildTopBar(),
-              ),
-
-              Positioned(
-                right: 16,
-                bottom: _showDetails ? 240 : 16,
-                child: _buildRecenterButton(),
-              ),
-
-              // Instruction chip
-              if (_selectedPosition == null)
-                Positioned(
-                  top: 190,
-                  left: 0,
-                  right: 0,
-                  child: Center(
-                    child: Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 12),
-                      decoration: BoxDecoration(
-                        color: AppColors.surface.withOpacity(0.95),
-                        borderRadius: BorderRadius.circular(20),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.3),
-                            blurRadius: 12,
+                child: Center(
+                  child: Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 12),
+                    decoration: BoxDecoration(
+                      color: AppColors.card,
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: AppColors.border, width: 1),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.08),
+                          blurRadius: 12,
+                        ),
+                      ],
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.touch_app_rounded,
+                            color: AppColors.primary, size: 20),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Tap on the map to set destination',
+                          style: TextStyle(
+                            color: AppColors.textPrimary,
+                            fontWeight: FontWeight.w500,
+                            fontSize: 14,
                           ),
-                        ],
-                      ),
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Icon(Icons.touch_app_rounded,
-                              color: AppColors.primary, size: 20),
-                          const SizedBox(width: 8),
-                          Text(
-                            'Tap on the map to set destination',
-                            style: TextStyle(
-                              color: AppColors.textPrimary,
-                              fontWeight: FontWeight.w500,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ],
-                      ),
+                        ),
+                      ],
                     ),
                   ),
                 ),
+              ),
 
-              // Bottom details sheet
-              if (_showDetails && _selectedPosition != null)
-                Positioned(
-                  bottom: 0,
-                  left: 0,
-                  right: 0,
-                  child: _buildBottomSheet(),
-                ),
-            ],
-          ),
+            // Bottom details sheet
+            if (_showDetails && _selectedPosition != null)
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: _buildBottomSheet(),
+              ),
+          ],
         ),
       ),
     );
@@ -270,15 +267,15 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12),
       decoration: BoxDecoration(
-        color: AppColors.surface.withOpacity(0.95),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(14),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.15),
+          color: AppColors.border,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.25),
+            color: Colors.black.withOpacity(0.08),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -291,8 +288,8 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
         style: const TextStyle(color: AppColors.textPrimary),
         decoration: InputDecoration(
           hintText: 'Search location...',
-          prefixIcon: Icon(Icons.search_rounded,
-              color: AppColors.textMuted, size: 20),
+          prefixIcon:
+              Icon(Icons.search_rounded, color: AppColors.textMuted, size: 20),
           suffixIcon: _searching
               ? const SizedBox(
                   width: 20,
@@ -313,6 +310,8 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
                     )
                   : null),
           border: InputBorder.none,
+          enabledBorder: InputBorder.none,
+          focusedBorder: InputBorder.none,
         ),
       ),
     );
@@ -323,15 +322,15 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
       constraints: const BoxConstraints(maxHeight: 220),
       child: Container(
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.25),
+              color: Colors.black.withOpacity(0.08),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -343,7 +342,7 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
           itemCount: _searchResults.length,
           separatorBuilder: (_, __) => Divider(
             height: 1,
-            color: AppColors.surfaceLight.withOpacity(0.6),
+            color: AppColors.borderLight,
           ),
           itemBuilder: (context, index) {
             final result = _searchResults[index];
@@ -381,15 +380,15 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -425,8 +424,8 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            AppColors.background.withOpacity(0.9),
-            Colors.transparent,
+            AppColors.background.withOpacity(0.95),
+            AppColors.background.withOpacity(0.0),
           ],
         ),
       ),
@@ -438,8 +437,16 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.textPrimary, size: 22),
@@ -465,13 +472,16 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
       curve: Curves.easeOutCubic,
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.card,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        border: Border(
+          top: BorderSide(color: AppColors.border, width: 1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 30,
-            offset: const Offset(0, -10),
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 20,
+            offset: const Offset(0, -6),
           ),
         ],
       ),
@@ -485,7 +495,7 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.textMuted.withOpacity(0.3),
+                color: AppColors.textMuted.withOpacity(0.25),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -515,8 +525,8 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
             style: const TextStyle(color: AppColors.textPrimary),
             decoration: InputDecoration(
               hintText: 'Name this destination...',
-              prefixIcon: Icon(Icons.edit_rounded,
-                  color: AppColors.primary, size: 20),
+              prefixIcon:
+                  Icon(Icons.edit_rounded, color: AppColors.primary, size: 20),
             ),
           ),
           const SizedBox(height: 20),
@@ -524,8 +534,7 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
           // Radius slider
           Row(
             children: [
-              Icon(Icons.radar_rounded,
-                  color: AppColors.primary, size: 18),
+              Icon(Icons.radar_rounded, color: AppColors.primary, size: 18),
               const SizedBox(width: 8),
               Text(
                 'Alert Radius',
@@ -537,10 +546,10 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
               ),
               const Spacer(),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 12, vertical: 6),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
                 decoration: BoxDecoration(
-                  color: AppColors.primary.withOpacity(0.15),
+                  color: AppColors.primary.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(10),
                 ),
                 child: Text(
@@ -559,9 +568,8 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
               activeTrackColor: AppColors.primary,
               inactiveTrackColor: AppColors.surfaceLight,
               thumbColor: AppColors.primary,
-              overlayColor: AppColors.primary.withOpacity(0.2),
-              thumbShape:
-                  const RoundSliderThumbShape(enabledThumbRadius: 8),
+              overlayColor: AppColors.primary.withOpacity(0.15),
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 8),
             ),
             child: Slider(
               value: _radius,
@@ -585,7 +593,7 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
                 borderRadius: BorderRadius.circular(18),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.primary.withOpacity(0.4),
+                    color: AppColors.primary.withOpacity(0.3),
                     blurRadius: 16,
                     offset: const Offset(0, 6),
                   ),

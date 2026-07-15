@@ -103,7 +103,9 @@ class BackgroundEngine {
       final destinationName = data['destinationName']?.toString() ?? '';
       final destLatitude = _parseDouble(data['destLatitude']);
       final destLongitude = _parseDouble(data['destLongitude']);
-      if (destinationName.isEmpty || destLatitude == null || destLongitude == null) {
+      if (destinationName.isEmpty ||
+          destLatitude == null ||
+          destLongitude == null) {
         return;
       }
       await tracker.updateDestination(
@@ -229,7 +231,8 @@ class _BackgroundTracker {
       );
     }
 
-    if (!_triggeredArrivalNotice && distanceMeters <= DistanceThresholds.veryClose) {
+    if (!_triggeredArrivalNotice &&
+        distanceMeters <= DistanceThresholds.veryClose) {
       _triggeredArrivalNotice = true;
       await _notificationEngine.showArrivalNotification(
         destinationName: _destinationName,

@@ -13,43 +13,39 @@ class HistoryScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(context),
-              Expanded(
-                child: Consumer<TripProvider>(
-                  builder: (context, provider, _) {
-                    final trips = provider.tripHistory;
-                    final activeTrip = provider.activeTrip;
-                    final visibleTrips = activeTrip == null
-                        ? trips
-                        : trips
-                            .where((trip) => trip.id != activeTrip.id)
-                            .toList();
-                    if (trips.isEmpty) {
-                      return _buildEmptyState();
-                    }
-                    return ListView(
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        if (activeTrip != null)
-                          _buildActiveTrackingBanner(context, activeTrip),
-                        ...visibleTrips.map((trip) => Padding(
-                              padding: const EdgeInsets.only(bottom: 10),
-                              child: _buildTripCard(context, trip),
-                            )),
-                      ],
-                    );
-                  },
-                ),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(context),
+            Expanded(
+              child: Consumer<TripProvider>(
+                builder: (context, provider, _) {
+                  final trips = provider.tripHistory;
+                  final activeTrip = provider.activeTrip;
+                  final visibleTrips = activeTrip == null
+                      ? trips
+                      : trips
+                          .where((trip) => trip.id != activeTrip.id)
+                          .toList();
+                  if (trips.isEmpty) {
+                    return _buildEmptyState();
+                  }
+                  return ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      if (activeTrip != null)
+                        _buildActiveTrackingBanner(context, activeTrip),
+                      ...visibleTrips.map((trip) => Padding(
+                            padding: const EdgeInsets.only(bottom: 10),
+                            child: _buildTripCard(context, trip),
+                          )),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -66,8 +62,16 @@ class HistoryScreen extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.textPrimary, size: 22),
@@ -89,11 +93,19 @@ class HistoryScreen extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.delete_sweep_rounded,
-                  color: AppColors.textPrimary, size: 22),
+                  color: AppColors.textSecondary, size: 22),
             ),
           ),
         ],
@@ -105,7 +117,7 @@ class HistoryScreen extends StatelessWidget {
     final shouldClear = await showDialog<bool>(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(20),
         ),
@@ -177,7 +189,7 @@ class HistoryScreen extends StatelessWidget {
           Text(
             'Your completed trips will appear here',
             style: TextStyle(
-              color: AppColors.textMuted.withOpacity(0.6),
+              color: AppColors.textMuted.withOpacity(0.7),
               fontSize: 13,
             ),
           ),
@@ -217,15 +229,15 @@ class HistoryScreen extends StatelessWidget {
       child: Container(
         padding: const EdgeInsets.all(16),
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: statusColor.withOpacity(0.15),
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.04),
               blurRadius: 12,
               offset: const Offset(0, 4),
             ),
@@ -238,7 +250,7 @@ class HistoryScreen extends StatelessWidget {
               width: 50,
               height: 50,
               decoration: BoxDecoration(
-                color: statusColor.withOpacity(0.15),
+                color: statusColor.withOpacity(0.08),
                 borderRadius: BorderRadius.circular(16),
               ),
               child: Icon(statusIcon, color: statusColor, size: 26),
@@ -262,8 +274,7 @@ class HistoryScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 4),
                   Text(
-                    DateFormat('MMM dd, yyyy • hh:mm a')
-                        .format(trip.startedAt),
+                    DateFormat('MMM dd, yyyy • hh:mm a').format(trip.startedAt),
                     style: const TextStyle(
                       fontSize: 12,
                       color: AppColors.textMuted,
@@ -278,10 +289,10 @@ class HistoryScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.end,
               children: [
                 Container(
-                  padding: const EdgeInsets.symmetric(
-                      horizontal: 10, vertical: 4),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                   decoration: BoxDecoration(
-                    color: statusColor.withOpacity(0.15),
+                    color: statusColor.withOpacity(0.08),
                     borderRadius: BorderRadius.circular(8),
                   ),
                   child: Text(
@@ -315,10 +326,10 @@ class HistoryScreen extends StatelessWidget {
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.warning.withOpacity(0.12),
+        color: AppColors.warning.withOpacity(0.06),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.warning.withOpacity(0.35),
+          color: AppColors.warning.withOpacity(0.2),
           width: 1,
         ),
       ),

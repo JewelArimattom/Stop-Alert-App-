@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../models/tracking_state.dart';
 import '../utils/constants.dart';
@@ -106,19 +105,19 @@ class _AlertLevelIndicatorState extends State<AlertLevelIndicator>
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   color: color.withOpacity(
-                    isActive ? 0.15 + _glowController.value * 0.1 : 0.08,
+                    isActive ? 0.08 + _glowController.value * 0.06 : 0.05,
                   ),
                   border: Border.all(
-                    color: color.withOpacity(isActive ? 0.6 : 0.2),
+                    color: color.withOpacity(isActive ? 0.4 : 0.15),
                     width: 2,
                   ),
                   boxShadow: isActive
                       ? [
                           BoxShadow(
                             color: color.withOpacity(
-                                0.3 + _glowController.value * 0.2),
-                            blurRadius: 20,
-                            spreadRadius: 5,
+                                0.15 + _glowController.value * 0.1),
+                            blurRadius: 16,
+                            spreadRadius: 3,
                           ),
                         ]
                       : [],
@@ -172,12 +171,12 @@ class RingPainter extends CustomPainter {
       final offset = i / rings;
       final ringProgress = (progress + offset) % 1.0;
       final radius = maxRadius * 0.3 + (maxRadius * 0.7) * ringProgress;
-      final opacity = (1.0 - ringProgress) * 0.5;
+      final opacity = (1.0 - ringProgress) * 0.3;
 
       final paint = Paint()
         ..color = color.withOpacity(opacity)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 2;
+        ..strokeWidth = 1.5;
 
       canvas.drawCircle(center, radius, paint);
     }

@@ -30,9 +30,8 @@ class NotificationEngine {
       enableVibration: true,
     );
 
-    final androidPlugin = _notifications
-        .resolvePlatformSpecificImplementation<
-            AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _notifications.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     await androidPlugin?.createNotificationChannel(channel);
 
     const trackingChannel = AndroidNotificationChannel(
@@ -179,7 +178,8 @@ class NotificationEngine {
     final hasVibrator = await Vibration.hasVibrator();
     if (hasVibrator) {
       await Vibration.vibrate(
-          pattern: [0, 500, 200, 500, 200, 1000], intensities: [0, 255, 0, 255, 0, 255]);
+          pattern: [0, 500, 200, 500, 200, 1000],
+          intensities: [0, 255, 0, 255, 0, 255]);
     }
   }
 

@@ -51,7 +51,7 @@ class _TrackingScreenState extends State<TrackingScreen>
     showDialog(
       context: context,
       builder: (ctx) => AlertDialog(
-        backgroundColor: AppColors.surface,
+        backgroundColor: AppColors.card,
         shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(24),
         ),
@@ -62,8 +62,7 @@ class _TrackingScreenState extends State<TrackingScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel',
-                style: TextStyle(color: AppColors.textMuted)),
+            child: Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
           ),
           ElevatedButton(
             onPressed: () async {
@@ -74,8 +73,7 @@ class _TrackingScreenState extends State<TrackingScreen>
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.danger,
             ),
-            child: const Text('Stop',
-                style: TextStyle(color: Colors.white)),
+            child: const Text('Stop', style: TextStyle(color: Colors.white)),
           ),
         ],
       ),
@@ -85,76 +83,72 @@ class _TrackingScreenState extends State<TrackingScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Consumer<TripProvider>(
-            builder: (context, provider, _) {
-              final tracking = provider.trackingData;
-              final trip = provider.activeTrip;
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Consumer<TripProvider>(
+          builder: (context, provider, _) {
+            final tracking = provider.trackingData;
+            final trip = provider.activeTrip;
 
-              if (trip == null) {
-                return const Center(child: Text('No active trip'));
-              }
+            if (trip == null) {
+              return const Center(child: Text('No active trip'));
+            }
 
-              return Stack(
-                children: [
-                  // Map
-                  Positioned.fill(
-                    child: MapWidget(
-                      controller: _mapController,
-                      center: tracking.currentPosition,
-                      currentPosition: tracking.currentPosition,
-                      destination: tracking.destination,
-                      geofenceRadius: trip.destRadius,
-                      showRoute: true,
-                      zoom: _calculateZoom(tracking.distanceMeters),
-                    ),
+            return Stack(
+              children: [
+                // Map
+                Positioned.fill(
+                  child: MapWidget(
+                    controller: _mapController,
+                    center: tracking.currentPosition,
+                    currentPosition: tracking.currentPosition,
+                    destination: tracking.destination,
+                    geofenceRadius: trip.destRadius,
+                    showRoute: true,
+                    zoom: _calculateZoom(tracking.distanceMeters),
                   ),
+                ),
 
-                  Positioned(
-                    right: 16,
-                    bottom: 220,
-                    child: _buildRecenterButton(tracking.currentPosition),
-                  ),
+                Positioned(
+                  right: 16,
+                  bottom: 220,
+                  child: _buildRecenterButton(tracking.currentPosition),
+                ),
 
-                  // Top bar
-                  Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: _buildTopBar(
-                      trip.destinationName,
-                      tracking.currentPosition,
-                    ),
+                // Top bar
+                Positioned(
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  child: _buildTopBar(
+                    trip.destinationName,
+                    tracking.currentPosition,
                   ),
+                ),
 
-                  // Bottom info panel
-                  Positioned(
-                    bottom: 0,
-                    left: 0,
-                    right: 0,
-                    child: SlideTransition(
-                      position: _slideAnimation,
-                      child: _buildBottomPanel(tracking, provider),
-                    ),
+                // Bottom info panel
+                Positioned(
+                  bottom: 0,
+                  left: 0,
+                  right: 0,
+                  child: SlideTransition(
+                    position: _slideAnimation,
+                    child: _buildBottomPanel(tracking, provider),
                   ),
+                ),
 
-                  // Alert indicator
-                  Positioned(
-                    top: 80,
-                    right: 16,
-                    child: AlertLevelIndicator(
-                      alertLevel: tracking.alertLevel,
-                      size: 80,
-                    ),
+                // Alert indicator
+                Positioned(
+                  top: 80,
+                  right: 16,
+                  child: AlertLevelIndicator(
+                    alertLevel: tracking.alertLevel,
+                    size: 80,
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );
@@ -167,15 +161,15 @@ class _TrackingScreenState extends State<TrackingScreen>
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -215,7 +209,7 @@ class _TrackingScreenState extends State<TrackingScreen>
           end: Alignment.bottomCenter,
           colors: [
             AppColors.background.withOpacity(0.95),
-            Colors.transparent,
+            AppColors.background.withOpacity(0.0),
           ],
         ),
       ),
@@ -227,8 +221,16 @@ class _TrackingScreenState extends State<TrackingScreen>
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.textPrimary, size: 22),
@@ -267,8 +269,16 @@ class _TrackingScreenState extends State<TrackingScreen>
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.06),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.search_rounded,
                   color: AppColors.textPrimary, size: 20),
@@ -279,10 +289,10 @@ class _TrackingScreenState extends State<TrackingScreen>
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.15),
+              color: AppColors.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(12),
               border: Border.all(
-                color: AppColors.primary.withOpacity(0.3),
+                color: AppColors.primary.withOpacity(0.2),
               ),
             ),
             child: Row(
@@ -296,7 +306,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                     shape: BoxShape.circle,
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.primary.withOpacity(0.5),
+                        color: AppColors.primary.withOpacity(0.4),
                         blurRadius: 6,
                       ),
                     ],
@@ -320,8 +330,7 @@ class _TrackingScreenState extends State<TrackingScreen>
     );
   }
 
-  Future<void> _openSearchAndStartTracking(
-      LatLng? currentPosition) async {
+  Future<void> _openSearchAndStartTracking(LatLng? currentPosition) async {
     final result = await Navigator.push<Destination>(
       context,
       PageRouteBuilder(
@@ -352,13 +361,16 @@ class _TrackingScreenState extends State<TrackingScreen>
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       decoration: BoxDecoration(
-        color: AppColors.background.withOpacity(0.95),
+        color: AppColors.background,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
+        border: Border(
+          top: BorderSide(color: AppColors.border, width: 1),
+        ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.5),
-            blurRadius: 30,
-            offset: const Offset(0, -10),
+            color: Colors.black.withOpacity(0.06),
+            blurRadius: 20,
+            offset: const Offset(0, -6),
           ),
         ],
       ),
@@ -371,7 +383,7 @@ class _TrackingScreenState extends State<TrackingScreen>
               width: 40,
               height: 4,
               decoration: BoxDecoration(
-                color: AppColors.textMuted.withOpacity(0.3),
+                color: AppColors.textMuted.withOpacity(0.25),
                 borderRadius: BorderRadius.circular(2),
               ),
             ),
@@ -401,7 +413,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                   borderRadius: BorderRadius.circular(16),
                   boxShadow: [
                     BoxShadow(
-                      color: AppColors.warning.withOpacity(0.3),
+                      color: AppColors.warning.withOpacity(0.25),
                       blurRadius: 12,
                       offset: const Offset(0, 4),
                     ),
@@ -440,7 +452,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                 borderRadius: BorderRadius.circular(16),
                 boxShadow: [
                   BoxShadow(
-                    color: AppColors.danger.withOpacity(0.3),
+                    color: AppColors.danger.withOpacity(0.25),
                     blurRadius: 12,
                     offset: const Offset(0, 4),
                   ),

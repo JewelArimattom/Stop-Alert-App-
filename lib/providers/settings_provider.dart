@@ -20,8 +20,7 @@ class SettingsProvider extends ChangeNotifier {
     _alertSoundDistance = StorageService.getAlertSoundDistance();
     _alertAlarmDistance = StorageService.getAlertAlarmDistance();
     _vibrationEnabled = StorageService.getVibrationEnabled();
-    _soundEnabled =
-        StorageService.getSetting<bool>('soundEnabled') ?? true;
+    _soundEnabled = StorageService.getSetting<bool>('soundEnabled') ?? true;
     notifyListeners();
   }
 

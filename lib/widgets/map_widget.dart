@@ -41,37 +41,11 @@ class MapWidget extends StatelessWidget {
           minZoom: 3,
         ),
         children: [
-          // Map tiles
+          // Clean bright map tiles — no dark overlay
           TileLayer(
-            urlTemplate:
-                'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
             userAgentPackageName: 'com.stopalert.app',
             tileProvider: tileProvider,
-          ),
-
-          // Dark overlay for better contrast
-          ColorFiltered(
-            colorFilter: const ColorFilter.mode(
-              Color(0x40000000),
-              BlendMode.darken,
-            ),
-            child: TileLayer(
-              urlTemplate:
-                  'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
-              userAgentPackageName: 'com.stopalert.app',
-              tileProvider: tileProvider,
-              tileBuilder: (context, tileWidget, tile) {
-                return ColorFiltered(
-                  colorFilter: const ColorFilter.matrix(<double>[
-                    0.2126, 0.7152, 0.0722, 0, 0,
-                    0.2126, 0.7152, 0.0722, 0, 0,
-                    0.2126, 0.7152, 0.0722, 0, 0,
-                    0, 0, 0, 1, 0,
-                  ]),
-                  child: tileWidget,
-                );
-              },
-            ),
           ),
 
           // Geofence circle
@@ -82,9 +56,9 @@ class MapWidget extends StatelessWidget {
                   point: destination!,
                   radius: geofenceRadius!,
                   useRadiusInMeter: true,
-                  color: AppColors.primary.withOpacity(0.1),
-                  borderColor: AppColors.primary.withOpacity(0.5),
-                  borderStrokeWidth: 2,
+                  color: AppColors.primary.withOpacity(0.12),
+                  borderColor: AppColors.primary.withOpacity(0.6),
+                  borderStrokeWidth: 2.5,
                 ),
               ],
             ),
@@ -95,8 +69,8 @@ class MapWidget extends StatelessWidget {
               polylines: [
                 Polyline(
                   points: [currentPosition!, destination!],
-                  color: AppColors.primary.withOpacity(0.6),
-                  strokeWidth: 3,
+                  color: AppColors.primary.withOpacity(0.7),
+                  strokeWidth: 4,
                   pattern: const StrokePattern.dotted(),
                 ),
               ],
@@ -109,17 +83,17 @@ class MapWidget extends StatelessWidget {
               if (currentPosition != null)
                 Marker(
                   point: currentPosition!,
-                  width: 30,
-                  height: 30,
+                  width: 32,
+                  height: 32,
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.info,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
+                      border: Border.all(color: Colors.white, width: 3.5),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.info.withOpacity(0.4),
-                          blurRadius: 10,
+                          color: AppColors.info.withOpacity(0.35),
+                          blurRadius: 12,
                           spreadRadius: 3,
                         ),
                       ],
@@ -131,17 +105,17 @@ class MapWidget extends StatelessWidget {
               if (destination != null)
                 Marker(
                   point: destination!,
-                  width: 40,
-                  height: 40,
+                  width: 44,
+                  height: 44,
                   child: Container(
                     decoration: BoxDecoration(
                       color: AppColors.danger,
                       shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3),
+                      border: Border.all(color: Colors.white, width: 3.5),
                       boxShadow: [
                         BoxShadow(
-                          color: AppColors.danger.withOpacity(0.4),
-                          blurRadius: 10,
+                          color: AppColors.danger.withOpacity(0.35),
+                          blurRadius: 12,
                           spreadRadius: 3,
                         ),
                       ],
@@ -149,7 +123,7 @@ class MapWidget extends StatelessWidget {
                     child: const Icon(
                       Icons.flag_rounded,
                       color: Colors.white,
-                      size: 20,
+                      size: 22,
                     ),
                   ),
                 ),

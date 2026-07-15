@@ -17,8 +17,7 @@ import '../utils/constants.dart';
 class TripProvider extends ChangeNotifier {
   final LocationEngine _locationEngine = LocationEngine();
   final GeofenceEngine _geofenceEngine = GeofenceEngine();
-  final TravelDetectionEngine _travelDetectionEngine =
-      TravelDetectionEngine();
+  final TravelDetectionEngine _travelDetectionEngine = TravelDetectionEngine();
   final NotificationEngine _notificationEngine = NotificationEngine();
   final _uuid = const Uuid();
 
@@ -48,6 +47,7 @@ class TripProvider extends ChangeNotifier {
     if (hasActiveInHistory) return _tripHistory;
     return [_activeTrip!, ..._tripHistory];
   }
+
   bool get isTracking => _activeTrip != null;
 
   Future<void> initialize() {
@@ -187,8 +187,7 @@ class TripProvider extends ChangeNotifier {
         speedKmh: _trackingData.speedKmh);
 
     // Calculate ETA
-    final eta =
-        DistanceEngine.calculateETA(distance, _trackingData.speedMps);
+    final eta = DistanceEngine.calculateETA(distance, _trackingData.speedMps);
 
     _trackingData = _trackingData.copyWith(
       currentPosition: position,
@@ -252,7 +251,8 @@ class TripProvider extends ChangeNotifier {
       if (!useBackgroundAlerts) {
         await _notificationEngine.triggerMilestoneAlarm(
           title: '1 km remaining',
-          body: 'Only ${distanceMeters.toInt()} m to ${_activeTrip!.destinationName}.',
+          body:
+              'Only ${distanceMeters.toInt()} m to ${_activeTrip!.destinationName}.',
           notificationId: NotificationIds.soundAlert,
         );
       }
@@ -272,7 +272,8 @@ class TripProvider extends ChangeNotifier {
       notifyListeners();
     }
 
-    if (!_triggeredArrivalNotice && distanceMeters <= DistanceThresholds.veryClose) {
+    if (!_triggeredArrivalNotice &&
+        distanceMeters <= DistanceThresholds.veryClose) {
       _triggeredArrivalNotice = true;
       _isAlarmRinging = false;
       if (!useBackgroundAlerts) {

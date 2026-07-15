@@ -16,8 +16,7 @@ class StorageService {
     Hive.registerAdapter(TripAdapter());
 
     // Open boxes
-    _destinationsBox =
-        await Hive.openBox<Destination>(HiveBoxes.destinations);
+    _destinationsBox = await Hive.openBox<Destination>(HiveBoxes.destinations);
     _tripsBox = await Hive.openBox<Trip>(HiveBoxes.trips);
     _settingsBox = await Hive.openBox(HiveBoxes.settings);
   }

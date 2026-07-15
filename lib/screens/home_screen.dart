@@ -54,8 +54,7 @@ class _HomeScreenState extends State<HomeScreen>
 
   void _startLocationPolling() {
     _locationTimer?.cancel();
-    _locationTimer =
-        Timer.periodic(const Duration(seconds: 5), (_) async {
+    _locationTimer = Timer.periodic(const Duration(seconds: 5), (_) async {
       await _refreshCurrentLocation();
     });
   }
@@ -64,16 +63,16 @@ class _HomeScreenState extends State<HomeScreen>
     final provider = context.read<TripProvider>();
     final pos = await provider.getCurrentLocation();
     if (!mounted) return;
-    final shouldRecenter = recenter || (_currentPosition == null && pos != null);
+    final shouldRecenter =
+        recenter || (_currentPosition == null && pos != null);
     setState(() {
       _currentPosition = pos ?? _currentPosition;
       _loading = false;
     });
     if (shouldRecenter && pos != null) {
-      final zoom = (_mapController.camera.zoom == 0
-              ? 14
-              : _mapController.camera.zoom)
-          .toDouble();
+      final zoom =
+          (_mapController.camera.zoom == 0 ? 14 : _mapController.camera.zoom)
+              .toDouble();
       _mapController.move(pos, zoom);
     }
   }
@@ -88,7 +87,8 @@ class _HomeScreenState extends State<HomeScreen>
             position: Tween<Offset>(
               begin: const Offset(0, 1),
               end: Offset.zero,
-            ).animate(CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
+            ).animate(
+                CurvedAnimation(parent: anim, curve: Curves.easeOutCubic)),
             child: child,
           );
         },
@@ -115,17 +115,18 @@ class _HomeScreenState extends State<HomeScreen>
   void _startQuickTrip(Destination destination) async {
     final provider = context.read<TripProvider>();
     final success = await provider.startTrip(destination);
-      if (success && mounted) {
-        _navigateToTracking();
-      } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: const Text('Background location permission required'),
-            backgroundColor: AppColors.danger,
-            behavior: SnackBarBehavior.floating,
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          ),
-        );
+    if (success && mounted) {
+      _navigateToTracking();
+    } else if (mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: const Text('Background location permission required'),
+          backgroundColor: AppColors.danger,
+          behavior: SnackBarBehavior.floating,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+        ),
+      );
     }
   }
 
@@ -139,29 +140,25 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              // App bar
-              _buildAppBar(),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            // App bar
+            _buildAppBar(),
 
-              // Map section
-              Expanded(
-                flex: 3,
-                child: _buildMapSection(),
-              ),
+            // Map section
+            Expanded(
+              flex: 3,
+              child: _buildMapSection(),
+            ),
 
-              // Recent trips
-              Expanded(
-                flex: 2,
-                child: _buildRecentTripsSection(),
-              ),
-            ],
-          ),
+            // Recent trips
+            Expanded(
+              flex: 2,
+              child: _buildRecentTripsSection(),
+            ),
+          ],
         ),
       ),
       floatingActionButton: _buildFAB(),
@@ -182,14 +179,14 @@ class _HomeScreenState extends State<HomeScreen>
               borderRadius: BorderRadius.circular(14),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withOpacity(0.25),
                   blurRadius: 12,
                   offset: const Offset(0, 4),
                 ),
               ],
             ),
             child: const Icon(Icons.notifications_active_rounded,
-              color: Colors.white, size: 22),
+                color: Colors.white, size: 22),
           ),
           const SizedBox(width: 12),
           Column(
@@ -247,12 +244,19 @@ class _HomeScreenState extends State<HomeScreen>
         width: 42,
         height: 42,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: AppColors.primary.withOpacity(0.1),
+            color: AppColors.border,
             width: 1,
           ),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.04),
+              blurRadius: 8,
+              offset: const Offset(0, 2),
+            ),
+          ],
         ),
         child: Icon(icon, color: AppColors.textSecondary, size: 20),
       ),
@@ -320,15 +324,15 @@ class _HomeScreenState extends State<HomeScreen>
         width: 44,
         height: 44,
         decoration: BoxDecoration(
-          color: AppColors.surface,
+          color: AppColors.card,
           borderRadius: BorderRadius.circular(14),
           border: Border.all(
-            color: AppColors.primary.withOpacity(0.2),
+            color: AppColors.border,
             width: 1,
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.2),
+              color: Colors.black.withOpacity(0.08),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
@@ -342,17 +346,15 @@ class _HomeScreenState extends State<HomeScreen>
 
   Future<void> _recenterToCurrent() async {
     final provider = context.read<TripProvider>();
-    final trackedPosition = provider.isTracking
-        ? provider.trackingData.currentPosition
-        : null;
+    final trackedPosition =
+        provider.isTracking ? provider.trackingData.currentPosition : null;
 
     // Recenter immediately using the best known location for a responsive tap.
     final immediateTarget = trackedPosition ?? _currentPosition;
     if (immediateTarget != null) {
-      final zoom = (_mapController.camera.zoom == 0
-              ? 14
-              : _mapController.camera.zoom)
-          .toDouble();
+      final zoom =
+          (_mapController.camera.zoom == 0 ? 14 : _mapController.camera.zoom)
+              .toDouble();
       _mapController.move(immediateTarget, zoom);
     }
 
@@ -360,9 +362,8 @@ class _HomeScreenState extends State<HomeScreen>
 
     if (!mounted) return;
 
-    final latestTrackedPosition = provider.isTracking
-        ? provider.trackingData.currentPosition
-        : null;
+    final latestTrackedPosition =
+        provider.isTracking ? provider.trackingData.currentPosition : null;
     final target = latestTrackedPosition ?? _currentPosition;
 
     if (target == null) {
@@ -378,10 +379,9 @@ class _HomeScreenState extends State<HomeScreen>
       return;
     }
 
-    final zoom = (_mapController.camera.zoom == 0
-            ? 14
-            : _mapController.camera.zoom)
-        .toDouble();
+    final zoom =
+        (_mapController.camera.zoom == 0 ? 14 : _mapController.camera.zoom)
+            .toDouble();
     _mapController.move(target, zoom);
   }
 
@@ -418,7 +418,8 @@ class _HomeScreenState extends State<HomeScreen>
                     onTap: () {
                       Navigator.push(
                         context,
-                        MaterialPageRoute(builder: (_) => const HistoryScreen()),
+                        MaterialPageRoute(
+                            builder: (_) => const HistoryScreen()),
                       );
                     },
                     child: Text(
@@ -439,8 +440,7 @@ class _HomeScreenState extends State<HomeScreen>
                   : ListView(
                       padding: const EdgeInsets.symmetric(horizontal: 16),
                       children: [
-                        if (activeTrip != null)
-                          _buildActiveTrackingCard(),
+                        if (activeTrip != null) _buildActiveTrackingCard(),
                         ...recentTrips.map(_buildRecentTripCard),
                       ],
                     ),
@@ -459,7 +459,7 @@ class _HomeScreenState extends State<HomeScreen>
           Icon(
             Icons.history_toggle_off_rounded,
             size: 48,
-            color: AppColors.textMuted.withOpacity(0.5),
+            color: AppColors.textMuted.withOpacity(0.4),
           ),
           const SizedBox(height: 12),
           Text(
@@ -474,7 +474,7 @@ class _HomeScreenState extends State<HomeScreen>
           Text(
             'Start tracking and your trips will appear here',
             style: TextStyle(
-              color: AppColors.textMuted.withOpacity(0.6),
+              color: AppColors.textMuted.withOpacity(0.7),
               fontSize: 12,
             ),
           ),
@@ -488,10 +488,10 @@ class _HomeScreenState extends State<HomeScreen>
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.primary.withOpacity(0.12),
+        color: AppColors.primary.withOpacity(0.06),
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.35),
+          color: AppColors.primary.withOpacity(0.2),
           width: 1,
         ),
       ),
@@ -538,12 +538,19 @@ class _HomeScreenState extends State<HomeScreen>
       margin: const EdgeInsets.only(bottom: 10),
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 12),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(
-          color: statusColor.withOpacity(0.2),
+          color: AppColors.border,
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -584,7 +591,7 @@ class _HomeScreenState extends State<HomeScreen>
           shape: BoxShape.circle,
           boxShadow: [
             BoxShadow(
-              color: AppColors.primary.withOpacity(0.4),
+              color: AppColors.primary.withOpacity(0.35),
               blurRadius: 20,
               offset: const Offset(0, 6),
             ),

@@ -38,7 +38,7 @@
         <a href="#download">Download</a>
       </nav>
 
-      <a class="button ghost track-download" href="downloads/StopAlert-Premium-v1.0.0.apk" download>Get APK</a>
+      <a class="button primary track-download" href="downloads/StopAlert-Premium-v1.0.0.apk" download>Get APK</a>
     </div>
   </header>
 
@@ -84,17 +84,107 @@
         <article class="phone-frame" aria-label="App preview mockup">
           <p class="status-pill">LIVE ROUTE</p>
           <div class="route-map">
-            <span class="point start"></span>
-            <span class="point mid"></span>
-            <span class="point end"></span>
-            <span class="route-line"></span>
-            <span class="pulse pulse-a"></span>
-            <span class="pulse pulse-b"></span>
+            <!-- SVG Map with streets and landmarks -->
+            <svg viewBox="0 0 300 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;">
+              <!-- Water body -->
+              <ellipse cx="240" cy="220" rx="80" ry="45" fill="#d1e9f6" opacity="0.5"/>
+              
+              <!-- Parks / green areas -->
+              <rect x="15" y="30" width="50" height="35" rx="6" fill="#d5edda" opacity="0.7"/>
+              <rect x="200" y="60" width="40" height="28" rx="5" fill="#d5edda" opacity="0.6"/>
+              <rect x="60" y="180" width="35" height="30" rx="5" fill="#d5edda" opacity="0.5"/>
+              
+              <!-- Buildings -->
+              <rect x="70" y="32" width="18" height="14" rx="2" fill="#d6dde5" opacity="0.7"/>
+              <rect x="93" y="30" width="22" height="18" rx="2" fill="#cdd5de" opacity="0.7"/>
+              <rect x="120" y="34" width="16" height="12" rx="2" fill="#d6dde5" opacity="0.6"/>
+              <rect x="20" y="80" width="28" height="20" rx="2" fill="#cdd5de" opacity="0.6"/>
+              <rect x="55" y="76" width="20" height="16" rx="2" fill="#d6dde5" opacity="0.65"/>
+              <rect x="170" y="40" width="24" height="18" rx="2" fill="#cdd5de" opacity="0.6"/>
+              <rect x="245" y="30" width="18" height="22" rx="2" fill="#d6dde5" opacity="0.5"/>
+              <rect x="30" y="120" width="22" height="16" rx="2" fill="#cdd5de" opacity="0.55"/>
+              <rect x="100" y="110" width="30" height="22" rx="2" fill="#d6dde5" opacity="0.6"/>
+              <rect x="180" y="120" width="20" height="14" rx="2" fill="#cdd5de" opacity="0.5"/>
+              <rect x="220" y="100" width="26" height="20" rx="2" fill="#d6dde5" opacity="0.55"/>
+              <rect x="140" y="170" width="22" height="16" rx="2" fill="#cdd5de" opacity="0.5"/>
+              <rect x="200" y="160" width="18" height="20" rx="2" fill="#d6dde5" opacity="0.5"/>
+              <rect x="110" y="220" width="25" height="18" rx="2" fill="#cdd5de" opacity="0.5"/>
+              <rect x="160" y="230" width="20" height="14" rx="2" fill="#d6dde5" opacity="0.45"/>
+              
+              <!-- Main roads -->
+              <line x1="0" y1="68" x2="300" y2="68" stroke="#c9d3dd" stroke-width="3"/>
+              <line x1="0" y1="150" x2="300" y2="150" stroke="#c9d3dd" stroke-width="3"/>
+              <line x1="0" y1="210" x2="300" y2="210" stroke="#c9d3dd" stroke-width="2.5"/>
+              <line x1="150" y1="0" x2="150" y2="280" stroke="#c9d3dd" stroke-width="3"/>
+              <line x1="80" y1="0" x2="80" y2="280" stroke="#c9d3dd" stroke-width="2.5"/>
+              <line x1="250" y1="0" x2="250" y2="280" stroke="#c9d3dd" stroke-width="2"/>
+              
+              <!-- Secondary roads -->
+              <line x1="0" y1="105" x2="300" y2="105" stroke="#d8e0e8" stroke-width="1.5"/>
+              <line x1="0" y1="250" x2="300" y2="250" stroke="#d8e0e8" stroke-width="1.5"/>
+              <line x1="40" y1="0" x2="40" y2="280" stroke="#d8e0e8" stroke-width="1.5"/>
+              <line x1="200" y1="0" x2="200" y2="280" stroke="#d8e0e8" stroke-width="1.5"/>
+              
+              <!-- Route path with glow -->
+              <path d="M150 30 L150 68 L150 105 Q150 120 140 135 L120 150 Q105 160 105 180 L105 210 Q105 230 120 245 L150 260" 
+                    stroke="#2563eb" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" filter="url(#glow)"/>
+              <path d="M150 30 L150 68 L150 105 Q150 120 140 135 L120 150 Q105 160 105 180 L105 210 Q105 230 120 245 L150 260" 
+                    stroke="#2563eb" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" 
+                    stroke-dasharray="8 5" opacity="0.85">
+                <animate attributeName="stroke-dashoffset" from="0" to="-26" dur="1.5s" repeatCount="indefinite"/>
+              </path>
+              
+              <!-- Glow filter -->
+              <defs>
+                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+                  <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
+                </filter>
+              </defs>
+              
+              <!-- Start marker -->
+              <circle cx="150" cy="30" r="7" fill="#10b981" stroke="#fff" stroke-width="3"/>
+              <circle cx="150" cy="30" r="14" fill="none" stroke="#10b981" stroke-width="1" opacity="0.3">
+                <animate attributeName="r" values="14;22;14" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <rect x="160" y="20" width="42" height="20" rx="5" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
+              <text x="170" y="34" font-size="8" font-weight="700" fill="#10b981" font-family="system-ui">Start</text>
+              
+              <!-- 1km alert marker -->
+              <circle cx="120" cy="150" r="7" fill="#f59e0b" stroke="#fff" stroke-width="3"/>
+              <circle cx="120" cy="150" r="14" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.3">
+                <animate attributeName="r" values="14;20;14" dur="2.5s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.3;0;0.3" dur="2.5s" repeatCount="indefinite"/>
+              </circle>
+              <rect x="60" y="139" width="52" height="20" rx="5" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
+              <text x="67" y="153" font-size="8" font-weight="700" fill="#f59e0b" font-family="system-ui">1 km alert</text>
+              
+              <!-- Destination marker -->
+              <circle cx="150" cy="260" r="8" fill="#ef4444" stroke="#fff" stroke-width="3"/>
+              <circle cx="150" cy="260" r="16" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.25">
+                <animate attributeName="r" values="16;28;16" dur="2s" repeatCount="indefinite"/>
+                <animate attributeName="opacity" values="0.25;0;0.25" dur="2s" repeatCount="indefinite"/>
+              </circle>
+              <circle cx="150" cy="260" r="24" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.12">
+                <animate attributeName="r" values="24;38;24" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+                <animate attributeName="opacity" values="0.12;0;0.12" dur="2s" repeatCount="indefinite" begin="0.5s"/>
+              </circle>
+              <rect x="163" y="249" width="62" height="20" rx="5" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
+              <text x="170" y="263" font-size="8" font-weight="700" fill="#ef4444" font-family="system-ui">Your Stop</text>
+            </svg>
+            
+            <!-- Keep empty spans for CSS compatibility -->
+            <span class="point start" style="display:none"></span>
+            <span class="point mid" style="display:none"></span>
+            <span class="point end" style="display:none"></span>
+            <span class="route-line" style="display:none"></span>
+            <span class="pulse pulse-a" style="display:none"></span>
+            <span class="pulse pulse-b" style="display:none"></span>
           </div>
           <div class="distance-panel">
             <p>Next reminder in</p>
             <strong>1.0 km</strong>
-            <span>Alarm + notification armed</span>
+            <span>● Alarm + notification armed</span>
           </div>
         </article>
 

@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import '../utils/constants.dart';
 import '../utils/helpers.dart';
@@ -59,8 +58,7 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
   @override
   Widget build(BuildContext context) {
     final color = _getZoneColor();
-    final shouldPulse =
-        widget.zone == TrackingZone.near ||
+    final shouldPulse = widget.zone == TrackingZone.near ||
         widget.zone == TrackingZone.veryClose ||
         widget.zone == TrackingZone.arrived;
 
@@ -73,19 +71,14 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
             decoration: BoxDecoration(
-              gradient: LinearGradient(
-                colors: [
-                  color.withOpacity(0.2),
-                  color.withOpacity(0.05),
-                ],
-              ),
+              color: color.withOpacity(0.06),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: color.withOpacity(0.4), width: 1.5),
+              border: Border.all(color: color.withOpacity(0.2), width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.2),
-                  blurRadius: 20,
-                  spreadRadius: 2,
+                  color: color.withOpacity(0.08),
+                  blurRadius: 16,
+                  spreadRadius: 1,
                 ),
               ],
             ),
@@ -107,7 +100,7 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
                   style: TextStyle(
                     fontSize: 14,
                     fontWeight: FontWeight.w500,
-                    color: color.withOpacity(0.8),
+                    color: color.withOpacity(0.7),
                   ),
                 ),
               ],

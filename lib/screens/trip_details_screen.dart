@@ -30,127 +30,122 @@ class TripDetailsScreen extends StatelessWidget {
             : Icons.play_circle_filled_rounded;
 
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(context),
-              Expanded(
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.all(16),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.stretch,
-                    children: [
-                      ClipRRect(
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(context),
+            Expanded(
+              child: SingleChildScrollView(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(20),
+                      child: SizedBox(
+                        height: 200,
+                        child: MapWidget(
+                          center: destination,
+                          destination: destination,
+                          geofenceRadius: trip.destRadius,
+                          zoom: 14,
+                        ),
+                      ),
+                    ),
+                    const SizedBox(height: 16),
+                    Container(
+                      padding: const EdgeInsets.all(18),
+                      decoration: BoxDecoration(
+                        color: AppColors.card,
                         borderRadius: BorderRadius.circular(20),
-                        child: SizedBox(
-                          height: 200,
-                          child: MapWidget(
-                            center: destination,
-                            destination: destination,
-                            geofenceRadius: trip.destRadius,
-                            zoom: 14,
+                        border: Border.all(
+                          color: AppColors.border,
+                          width: 1,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.04),
+                            blurRadius: 12,
+                            offset: const Offset(0, 4),
                           ),
-                        ),
+                        ],
                       ),
-                      const SizedBox(height: 16),
-                      Container(
-                        padding: const EdgeInsets.all(18),
-                        decoration: BoxDecoration(
-                          color: AppColors.surface,
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(
-                            color: statusColor.withOpacity(0.15),
-                            width: 1,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              Container(
+                                width: 44,
+                                height: 44,
+                                decoration: BoxDecoration(
+                                  color: statusColor.withOpacity(0.08),
+                                  borderRadius: BorderRadius.circular(14),
+                                ),
+                                child: Icon(statusIcon,
+                                    color: statusColor, size: 24),
+                              ),
+                              const SizedBox(width: 12),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      trip.destinationName,
+                                      style: const TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w700,
+                                        color: AppColors.textPrimary,
+                                      ),
+                                      maxLines: 2,
+                                      overflow: TextOverflow.ellipsis,
+                                    ),
+                                    const SizedBox(height: 4),
+                                    Text(
+                                      statusText,
+                                      style: TextStyle(
+                                        fontSize: 12,
+                                        fontWeight: FontWeight.w600,
+                                        color: statusColor,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ],
                           ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black.withOpacity(0.2),
-                              blurRadius: 12,
-                              offset: const Offset(0, 4),
-                            ),
-                          ],
-                        ),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 44,
-                                  height: 44,
-                                  decoration: BoxDecoration(
-                                    color: statusColor.withOpacity(0.15),
-                                    borderRadius: BorderRadius.circular(14),
-                                  ),
-                                  child: Icon(statusIcon,
-                                      color: statusColor, size: 24),
-                                ),
-                                const SizedBox(width: 12),
-                                Expanded(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        trip.destinationName,
-                                        style: const TextStyle(
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.w700,
-                                          color: AppColors.textPrimary,
-                                        ),
-                                        maxLines: 2,
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      const SizedBox(height: 4),
-                                      Text(
-                                        statusText,
-                                        style: TextStyle(
-                                          fontSize: 12,
-                                          fontWeight: FontWeight.w600,
-                                          color: statusColor,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 16),
-                            _buildInfoRow(
-                              'Started',
-                              DateFormat('MMM dd, yyyy • hh:mm a')
-                                  .format(trip.startedAt),
-                            ),
-                            _buildInfoRow(
-                              'Completed',
-                              trip.completedAt != null
-                                  ? DateFormat('MMM dd, yyyy • hh:mm a')
-                                      .format(trip.completedAt!)
-                                  : 'Not completed',
-                            ),
-                            _buildInfoRow('Duration', trip.durationString),
-                            _buildInfoRow(
-                              'Coordinates',
-                              '${trip.destLatitude.toStringAsFixed(5)}, '
-                              '${trip.destLongitude.toStringAsFixed(5)}',
-                            ),
-                            _buildInfoRow(
-                              'Alert radius',
-                              '${trip.destRadius.toStringAsFixed(0)} m',
-                            ),
-                          ],
-                        ),
+                          const SizedBox(height: 16),
+                          _buildInfoRow(
+                            'Started',
+                            DateFormat('MMM dd, yyyy • hh:mm a')
+                                .format(trip.startedAt),
+                          ),
+                          _buildInfoRow(
+                            'Completed',
+                            trip.completedAt != null
+                                ? DateFormat('MMM dd, yyyy • hh:mm a')
+                                    .format(trip.completedAt!)
+                                : 'Not completed',
+                          ),
+                          _buildInfoRow('Duration', trip.durationString),
+                          _buildInfoRow(
+                            'Coordinates',
+                            '${trip.destLatitude.toStringAsFixed(5)}, '
+                                '${trip.destLongitude.toStringAsFixed(5)}',
+                          ),
+                          _buildInfoRow(
+                            'Alert radius',
+                            '${trip.destRadius.toStringAsFixed(0)} m',
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -167,8 +162,16 @@ class TripDetailsScreen extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.textPrimary, size: 22),

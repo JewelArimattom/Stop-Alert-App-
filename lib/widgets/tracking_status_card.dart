@@ -16,17 +16,17 @@ class TrackingStatusCard extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface.withOpacity(0.9),
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.15),
+          color: AppColors.border,
           width: 1,
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.3),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+            color: Colors.black.withOpacity(0.04),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
       ),
@@ -62,8 +62,12 @@ class TrackingStatusCard extends StatelessWidget {
                 vertical: 8,
               ),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.15),
+                color: AppColors.warning.withOpacity(0.06),
                 borderRadius: BorderRadius.circular(12),
+                border: Border.all(
+                  color: AppColors.warning.withOpacity(0.15),
+                  width: 1,
+                ),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -133,7 +137,7 @@ class TrackingStatusCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.3),
+            color: AppColors.primary.withOpacity(0.25),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),
@@ -142,14 +146,14 @@ class TrackingStatusCard extends StatelessWidget {
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: AppColors.background, size: 18),
+          Icon(icon, color: Colors.white, size: 18),
           const SizedBox(width: 6),
           Text(
             label,
             style: const TextStyle(
               fontSize: 13,
               fontWeight: FontWeight.w700,
-              color: AppColors.background,
+              color: Colors.white,
             ),
           ),
         ],

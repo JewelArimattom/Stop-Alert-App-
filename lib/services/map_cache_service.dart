@@ -99,7 +99,8 @@ class _CachedTileImageProvider extends ImageProvider<_CachedTileImageProvider> {
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || (other is _CachedTileImageProvider && url == other.url);
+      identical(this, other) ||
+      (other is _CachedTileImageProvider && url == other.url);
 
   @override
   int get hashCode => url.hashCode;

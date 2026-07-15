@@ -9,85 +9,79 @@ class SettingsScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        decoration: const BoxDecoration(
-          gradient: AppColors.backgroundGradient,
-        ),
-        child: SafeArea(
-          child: Column(
-            children: [
-              _buildAppBar(context),
-              Expanded(
-                child: Consumer<SettingsProvider>(
-                  builder: (context, settings, _) {
-                    return ListView(
-                      padding: const EdgeInsets.all(16),
-                      children: [
-                        _buildSectionHeader('Alert Distances'),
-                        const SizedBox(height: 12),
-                        _buildDistanceSlider(
-                          icon: Icons.notifications_outlined,
-                          label: 'Notification Alert',
-                          description: 'First notification when approaching',
-                          value: settings.alertNotifyDistance,
-                          min: 500,
-                          max: 5000,
-                          color: AppColors.info,
-                          onChanged: settings.setAlertNotifyDistance,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildDistanceSlider(
-                          icon: Icons.volume_up_rounded,
-                          label: 'Sound Alert',
-                          description: 'Play sound when getting close',
-                          value: settings.alertSoundDistance,
-                          min: 200,
-                          max: 2000,
-                          color: AppColors.warning,
-                          onChanged: settings.setAlertSoundDistance,
-                        ),
-                        const SizedBox(height: 12),
-                        _buildDistanceSlider(
-                          icon: Icons.alarm_rounded,
-                          label: 'Continuous Alarm',
-                          description: 'Full alarm when very close',
-                          value: settings.alertAlarmDistance,
-                          min: 50,
-                          max: 1000,
-                          color: AppColors.danger,
-                          onChanged: settings.setAlertAlarmDistance,
-                        ),
-                        const SizedBox(height: 28),
-
-                        _buildSectionHeader('Preferences'),
-                        const SizedBox(height: 12),
-                        _buildSwitchTile(
-                          icon: Icons.vibration_rounded,
-                          label: 'Vibration',
-                          description: 'Vibrate on alerts',
-                          value: settings.vibrationEnabled,
-                          onChanged: settings.setVibrationEnabled,
-                        ),
-                        const SizedBox(height: 10),
-                        _buildSwitchTile(
-                          icon: Icons.music_note_rounded,
-                          label: 'Sound',
-                          description: 'Play alert sounds',
-                          value: settings.soundEnabled,
-                          onChanged: settings.setSoundEnabled,
-                        ),
-                        const SizedBox(height: 28),
-
-                        _buildSectionHeader('About'),
-                        const SizedBox(height: 12),
-                        _buildInfoCard(),
-                      ],
-                    );
-                  },
-                ),
+      backgroundColor: AppColors.background,
+      body: SafeArea(
+        child: Column(
+          children: [
+            _buildAppBar(context),
+            Expanded(
+              child: Consumer<SettingsProvider>(
+                builder: (context, settings, _) {
+                  return ListView(
+                    padding: const EdgeInsets.all(16),
+                    children: [
+                      _buildSectionHeader('Alert Distances'),
+                      const SizedBox(height: 12),
+                      _buildDistanceSlider(
+                        icon: Icons.notifications_outlined,
+                        label: 'Notification Alert',
+                        description: 'First notification when approaching',
+                        value: settings.alertNotifyDistance,
+                        min: 500,
+                        max: 5000,
+                        color: AppColors.info,
+                        onChanged: settings.setAlertNotifyDistance,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildDistanceSlider(
+                        icon: Icons.volume_up_rounded,
+                        label: 'Sound Alert',
+                        description: 'Play sound when getting close',
+                        value: settings.alertSoundDistance,
+                        min: 200,
+                        max: 2000,
+                        color: AppColors.warning,
+                        onChanged: settings.setAlertSoundDistance,
+                      ),
+                      const SizedBox(height: 12),
+                      _buildDistanceSlider(
+                        icon: Icons.alarm_rounded,
+                        label: 'Continuous Alarm',
+                        description: 'Full alarm when very close',
+                        value: settings.alertAlarmDistance,
+                        min: 50,
+                        max: 1000,
+                        color: AppColors.danger,
+                        onChanged: settings.setAlertAlarmDistance,
+                      ),
+                      const SizedBox(height: 28),
+                      _buildSectionHeader('Preferences'),
+                      const SizedBox(height: 12),
+                      _buildSwitchTile(
+                        icon: Icons.vibration_rounded,
+                        label: 'Vibration',
+                        description: 'Vibrate on alerts',
+                        value: settings.vibrationEnabled,
+                        onChanged: settings.setVibrationEnabled,
+                      ),
+                      const SizedBox(height: 10),
+                      _buildSwitchTile(
+                        icon: Icons.music_note_rounded,
+                        label: 'Sound',
+                        description: 'Play alert sounds',
+                        value: settings.soundEnabled,
+                        onChanged: settings.setSoundEnabled,
+                      ),
+                      const SizedBox(height: 28),
+                      _buildSectionHeader('About'),
+                      const SizedBox(height: 12),
+                      _buildInfoCard(),
+                    ],
+                  );
+                },
               ),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
@@ -104,8 +98,16 @@ class SettingsScreen extends StatelessWidget {
               width: 42,
               height: 42,
               decoration: BoxDecoration(
-                color: AppColors.surface,
+                color: AppColors.card,
                 borderRadius: BorderRadius.circular(14),
+                border: Border.all(color: AppColors.border, width: 1),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.04),
+                    blurRadius: 8,
+                    offset: const Offset(0, 2),
+                  ),
+                ],
               ),
               child: const Icon(Icons.arrow_back_rounded,
                   color: AppColors.textPrimary, size: 22),
@@ -162,12 +164,19 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: color.withOpacity(0.1),
+          color: AppColors.border,
           width: 1,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -177,7 +186,7 @@ class SettingsScreen extends StatelessWidget {
                 width: 40,
                 height: 40,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(12),
                 ),
                 child: Icon(icon, color: color, size: 20),
@@ -206,10 +215,10 @@ class SettingsScreen extends StatelessWidget {
                 ),
               ),
               Container(
-                padding: const EdgeInsets.symmetric(
-                    horizontal: 10, vertical: 4),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.15),
+                  color: color.withOpacity(0.08),
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(
@@ -231,9 +240,8 @@ class SettingsScreen extends StatelessWidget {
               activeTrackColor: color,
               inactiveTrackColor: AppColors.surfaceLight,
               thumbColor: color,
-              overlayColor: color.withOpacity(0.2),
-              thumbShape:
-                  const RoundSliderThumbShape(enabledThumbRadius: 7),
+              overlayColor: color.withOpacity(0.12),
+              thumbShape: const RoundSliderThumbShape(enabledThumbRadius: 7),
               trackHeight: 3,
             ),
             child: Slider(
@@ -258,8 +266,16 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: AppColors.border, width: 1),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         children: [
@@ -267,7 +283,7 @@ class SettingsScreen extends StatelessWidget {
             width: 40,
             height: 40,
             decoration: BoxDecoration(
-              color: AppColors.primary.withOpacity(0.15),
+              color: AppColors.primary.withOpacity(0.08),
               borderRadius: BorderRadius.circular(12),
             ),
             child: Icon(icon, color: AppColors.primary, size: 20),
@@ -299,7 +315,7 @@ class SettingsScreen extends StatelessWidget {
             value: value,
             onChanged: onChanged,
             activeColor: AppColors.primary,
-            activeTrackColor: AppColors.primary.withOpacity(0.3),
+            activeTrackColor: AppColors.primary.withOpacity(0.25),
             inactiveThumbColor: AppColors.textMuted,
             inactiveTrackColor: AppColors.surfaceLight,
           ),
@@ -312,11 +328,18 @@ class SettingsScreen extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: AppColors.surface,
+        color: AppColors.card,
         borderRadius: BorderRadius.circular(20),
         border: Border.all(
-          color: AppColors.primary.withOpacity(0.1),
+          color: AppColors.border,
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.03),
+            blurRadius: 8,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Column(
         children: [
@@ -328,7 +351,7 @@ class SettingsScreen extends StatelessWidget {
               borderRadius: BorderRadius.circular(18),
               boxShadow: [
                 BoxShadow(
-                  color: AppColors.primary.withOpacity(0.3),
+                  color: AppColors.primary.withOpacity(0.25),
                   blurRadius: 16,
                   offset: const Offset(0, 4),
                 ),
