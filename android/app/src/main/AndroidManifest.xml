@@ -23,6 +23,10 @@
     <!-- Internet for map tiles -->
     <uses-permission android:name="android.permission.INTERNET" />
 
+    <!-- Storage for custom alarm sounds -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_MEDIA_AUDIO" />
+
     <application
         android:label="StopAlert Premium"
         android:name="${applicationName}"

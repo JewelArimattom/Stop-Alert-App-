@@ -26,11 +26,11 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
   void initState() {
     super.initState();
     _controller = AnimationController(
-      duration: const Duration(milliseconds: 1500),
+      duration: const Duration(milliseconds: 1400),
       vsync: this,
     )..repeat(reverse: true);
 
-    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.1).animate(
+    _pulseAnimation = Tween<double>(begin: 1.0, end: 1.08).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
   }
@@ -71,14 +71,14 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
           child: Container(
             padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 16),
             decoration: BoxDecoration(
-              color: color.withOpacity(0.06),
+              color: color.withOpacity(0.08),
               borderRadius: BorderRadius.circular(24),
-              border: Border.all(color: color.withOpacity(0.2), width: 1.5),
+              border: Border.all(color: color.withOpacity(0.35), width: 1.5),
               boxShadow: [
                 BoxShadow(
-                  color: color.withOpacity(0.08),
-                  blurRadius: 16,
-                  spreadRadius: 1,
+                  color: color.withOpacity(0.18),
+                  blurRadius: 18,
+                  spreadRadius: 2,
                 ),
               ],
             ),
@@ -88,7 +88,7 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
                 Text(
                   Helpers.formatDistance(widget.distanceMeters),
                   style: TextStyle(
-                    fontSize: 36,
+                    fontSize: 38,
                     fontWeight: FontWeight.w800,
                     color: color,
                     letterSpacing: -1,
@@ -98,9 +98,10 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
                 Text(
                   Helpers.getZoneName(widget.zone.name.toUpperCase()),
                   style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.w500,
-                    color: color.withOpacity(0.7),
+                    fontSize: 13,
+                    fontWeight: FontWeight.w600,
+                    color: color.withOpacity(0.85),
+                    letterSpacing: 0.5,
                   ),
                 ),
               ],
@@ -109,36 +110,5 @@ class _DistanceIndicatorState extends State<DistanceIndicator>
         );
       },
     );
-  }
-}
-
-class AnimatedBuilder extends StatelessWidget {
-  final Animation<double> animation;
-  final Widget Function(BuildContext, Widget?) builder;
-
-  const AnimatedBuilder({
-    super.key,
-    required this.animation,
-    required this.builder,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return AnimatedBuilder2(animation: animation, builder: builder);
-  }
-}
-
-class AnimatedBuilder2 extends AnimatedWidget {
-  final Widget Function(BuildContext, Widget?) builder;
-
-  const AnimatedBuilder2({
-    super.key,
-    required Animation<double> animation,
-    required this.builder,
-  }) : super(listenable: animation);
-
-  @override
-  Widget build(BuildContext context) {
-    return builder(context, null);
   }
 }

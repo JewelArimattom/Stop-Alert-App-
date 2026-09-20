@@ -22,11 +22,11 @@ class TrackingStatusCard extends StatelessWidget {
           color: AppColors.border,
           width: 1,
         ),
-        boxShadow: [
+        boxShadow: const [
           BoxShadow(
-            color: Colors.black.withOpacity(0.04),
-            blurRadius: 12,
-            offset: const Offset(0, 4),
+            color: AppColors.cardShadow,
+            blurRadius: 16,
+            offset: Offset(0, 4),
           ),
         ],
       ),
@@ -62,19 +62,19 @@ class TrackingStatusCard extends StatelessWidget {
                 vertical: 8,
               ),
               decoration: BoxDecoration(
-                color: AppColors.warning.withOpacity(0.06),
+                color: AppColors.warning.withOpacity(0.1),
                 borderRadius: BorderRadius.circular(12),
                 border: Border.all(
-                  color: AppColors.warning.withOpacity(0.15),
+                  color: AppColors.warning.withOpacity(0.3),
                   width: 1,
                 ),
               ),
-              child: Row(
+              child: const Row(
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Icon(Icons.pause_circle_outline,
                       color: AppColors.warning, size: 16),
-                  const SizedBox(width: 8),
+                  SizedBox(width: 8),
                   Text(
                     'Idle - GPS paused to save battery',
                     style: TextStyle(
@@ -104,7 +104,7 @@ class TrackingStatusCard extends StatelessWidget {
         const SizedBox(height: 6),
         Text(
           value,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 16,
             fontWeight: FontWeight.w700,
             color: AppColors.textPrimary,
@@ -113,7 +113,7 @@ class TrackingStatusCard extends StatelessWidget {
         const SizedBox(height: 2),
         Text(
           label,
-          style: TextStyle(
+          style: const TextStyle(
             fontSize: 11,
             color: AppColors.textMuted,
             fontWeight: FontWeight.w500,
@@ -137,7 +137,7 @@ class TrackingStatusCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(16),
         boxShadow: [
           BoxShadow(
-            color: AppColors.primary.withOpacity(0.25),
+            color: AppColors.primary.withOpacity(0.3),
             blurRadius: 12,
             offset: const Offset(0, 4),
           ),

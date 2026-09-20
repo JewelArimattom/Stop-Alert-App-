@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter_map/flutter_map.dart';
@@ -9,6 +10,7 @@ import '../widgets/map_widget.dart';
 import '../widgets/distance_indicator.dart';
 import '../widgets/tracking_status_card.dart';
 import '../widgets/alert_level_indicator.dart';
+import '../services/mapbox_service.dart';
 import 'set_destination_screen.dart';
 
 class TrackingScreen extends StatefulWidget {
@@ -23,6 +25,18 @@ class _TrackingScreenState extends State<TrackingScreen>
   final MapController _mapController = MapController();
   late AnimationController _slideController;
   late Animation<Offset> _slideAnimation;
+
+  /// Mapbox road-following route polyline
+  List<LatLng>? _routePoints;
+
+  /// Road distance from Mapbox (meters)
+  double? _roadDistanceMeters;
+
+  /// Timer to throttle route refetches
+  Timer? _routeRefreshTimer;
+
+  /// Last position used for route fetch, to avoid redundant calls
+  LatLng? _lastRouteFetchPosition;
 
   @override
   void initState() {
@@ -39,12 +53,55 @@ class _TrackingScreenState extends State<TrackingScreen>
       parent: _slideController,
       curve: Curves.easeOutCubic,
     ));
+
+    // Fetch initial route after first frame
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _fetchRouteIfNeeded();
+    });
+
+    // Periodically refresh route every 30 seconds
+    _routeRefreshTimer = Timer.periodic(const Duration(seconds: 30), (_) {
+      _fetchRouteIfNeeded();
+    });
   }
 
   @override
   void dispose() {
     _slideController.dispose();
+    _routeRefreshTimer?.cancel();
     super.dispose();
+  }
+
+  /// Fetch a Mapbox route if the position has changed significantly
+  Future<void> _fetchRouteIfNeeded() async {
+    final provider = context.read<TripProvider>();
+    final tracking = provider.trackingData;
+    final current = tracking.currentPosition;
+    final dest = tracking.destination;
+
+    if (current == null || dest == null) return;
+
+    // Skip if position hasn't moved more than 200m from last fetch
+    if (_lastRouteFetchPosition != null) {
+      final movedMeters = const Distance().as(
+        LengthUnit.Meter,
+        _lastRouteFetchPosition!,
+        current,
+      );
+      if (movedMeters < 200) return;
+    }
+
+    _lastRouteFetchPosition = current;
+
+    final route = await MapboxService.getRoute(current, dest);
+    if (!mounted) return;
+
+    setState(() {
+      if (route != null) {
+        _routePoints = route.points;
+        _roadDistanceMeters = route.distanceMeters;
+      }
+    });
   }
 
   void _stopTrip(BuildContext context) {
@@ -62,13 +119,15 @@ class _TrackingScreenState extends State<TrackingScreen>
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(ctx),
-            child: Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
+            child: const Text('Cancel', style: TextStyle(color: AppColors.textMuted)),
           ),
           ElevatedButton(
             onPressed: () async {
+              final nav = Navigator.of(context);
+              final tripProvider = context.read<TripProvider>();
               Navigator.pop(ctx);
-              await context.read<TripProvider>().stopTrip(cancel: true);
-              if (mounted) Navigator.pop(context);
+              await tripProvider.stopTrip(cancel: true);
+              if (mounted) nav.pop();
             },
             style: ElevatedButton.styleFrom(
               backgroundColor: AppColors.danger,
@@ -94,6 +153,11 @@ class _TrackingScreenState extends State<TrackingScreen>
               return const Center(child: Text('No active trip'));
             }
 
+            // Trigger route refetch when position updates significantly
+            if (tracking.currentPosition != null) {
+              _fetchRouteIfNeeded();
+            }
+
             return Stack(
               children: [
                 // Map
@@ -106,6 +170,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                     geofenceRadius: trip.destRadius,
                     showRoute: true,
                     zoom: _calculateZoom(tracking.distanceMeters),
+                    routePoints: _routePoints,
                   ),
                 ),
 
@@ -169,14 +234,14 @@ class _TrackingScreenState extends State<TrackingScreen>
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withOpacity(0.08),
+              color: Colors.black.withOpacity(0.06),
               blurRadius: 8,
               offset: const Offset(0, 2),
             ),
           ],
         ),
         child: const Icon(Icons.my_location,
-            color: AppColors.textPrimary, size: 20),
+            color: AppColors.primary, size: 20),
       ),
     );
   }
@@ -241,7 +306,7 @@ class _TrackingScreenState extends State<TrackingScreen>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
+                const Text(
                   'Tracking Active',
                   style: TextStyle(
                     fontSize: 12,
@@ -281,7 +346,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                 ],
               ),
               child: const Icon(Icons.search_rounded,
-                  color: AppColors.textPrimary, size: 20),
+                  color: AppColors.textSecondary, size: 20),
             ),
           ),
           const SizedBox(width: 10),
@@ -313,7 +378,7 @@ class _TrackingScreenState extends State<TrackingScreen>
                   ),
                 ),
                 const SizedBox(width: 6),
-                Text(
+                const Text(
                   'LIVE',
                   style: TextStyle(
                     color: AppColors.primary,
@@ -354,16 +419,27 @@ class _TrackingScreenState extends State<TrackingScreen>
               RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
         ),
       );
+    } else {
+      // Reset route state for new trip
+      setState(() {
+        _routePoints = null;
+        _roadDistanceMeters = null;
+        _lastRouteFetchPosition = null;
+      });
+      _fetchRouteIfNeeded();
     }
   }
 
   Widget _buildBottomPanel(tracking, TripProvider provider) {
+    // Use road distance if available, otherwise haversine
+    final displayDistance = _roadDistanceMeters ?? tracking.distanceMeters;
+
     return Container(
       padding: const EdgeInsets.fromLTRB(20, 20, 20, 16),
       decoration: BoxDecoration(
-        color: AppColors.background,
+        color: AppColors.card,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(28)),
-        border: Border(
+        border: const Border(
           top: BorderSide(color: AppColors.border, width: 1),
         ),
         boxShadow: [
@@ -390,9 +466,9 @@ class _TrackingScreenState extends State<TrackingScreen>
           ),
           const SizedBox(height: 16),
 
-          // Distance indicator
+          // Distance indicator — shows road distance when available
           DistanceIndicator(
-            distanceMeters: tracking.distanceMeters,
+            distanceMeters: displayDistance,
             zone: tracking.zone,
           ),
           const SizedBox(height: 16),
@@ -458,14 +534,14 @@ class _TrackingScreenState extends State<TrackingScreen>
                   ),
                 ],
               ),
-              child: Center(
+              child: const Center(
                 child: Row(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    const Icon(Icons.stop_rounded,
+                    Icon(Icons.stop_rounded,
                         color: Colors.white, size: 22),
-                    const SizedBox(width: 8),
-                    const Text(
+                    SizedBox(width: 8),
+                    Text(
                       'Stop Tracking',
                       style: TextStyle(
                         fontSize: 16,

@@ -8,12 +8,17 @@ class SettingsProvider extends ChangeNotifier {
   double _alertAlarmDistance = DistanceThresholds.alertAlarm;
   bool _vibrationEnabled = true;
   bool _soundEnabled = true;
+  String? _customAlarmPath;
+  String? _customAlarmName;
 
   double get alertNotifyDistance => _alertNotifyDistance;
   double get alertSoundDistance => _alertSoundDistance;
   double get alertAlarmDistance => _alertAlarmDistance;
   bool get vibrationEnabled => _vibrationEnabled;
   bool get soundEnabled => _soundEnabled;
+  String? get customAlarmPath => _customAlarmPath;
+  String? get customAlarmName => _customAlarmName;
+  bool get hasCustomAlarm => _customAlarmPath != null && _customAlarmPath!.isNotEmpty;
 
   void load() {
     _alertNotifyDistance = StorageService.getAlertNotifyDistance();
@@ -21,6 +26,8 @@ class SettingsProvider extends ChangeNotifier {
     _alertAlarmDistance = StorageService.getAlertAlarmDistance();
     _vibrationEnabled = StorageService.getVibrationEnabled();
     _soundEnabled = StorageService.getSetting<bool>('soundEnabled') ?? true;
+    _customAlarmPath = StorageService.getSetting<String>('customAlarmPath');
+    _customAlarmName = StorageService.getSetting<String>('customAlarmName');
     notifyListeners();
   }
 
@@ -51,6 +58,22 @@ class SettingsProvider extends ChangeNotifier {
   Future<void> setSoundEnabled(bool value) async {
     _soundEnabled = value;
     await StorageService.saveSetting('soundEnabled', value);
+    notifyListeners();
+  }
+
+  Future<void> setCustomAlarm(String path, String name) async {
+    _customAlarmPath = path;
+    _customAlarmName = name;
+    await StorageService.saveSetting('customAlarmPath', path);
+    await StorageService.saveSetting('customAlarmName', name);
+    notifyListeners();
+  }
+
+  Future<void> clearCustomAlarm() async {
+    _customAlarmPath = null;
+    _customAlarmName = null;
+    await StorageService.saveSetting('customAlarmPath', null);
+    await StorageService.saveSetting('customAlarmName', null);
     notifyListeners();
   }
 }

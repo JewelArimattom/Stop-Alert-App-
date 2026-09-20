@@ -237,6 +237,11 @@ class _BackgroundTracker {
       await _notificationEngine.showArrivalNotification(
         destinationName: _destinationName,
       );
+      // Automatically shut down background service shortly after arrival
+      Timer(const Duration(seconds: 10), () async {
+        await stop();
+        _service.stopSelf();
+      });
     }
   }
 

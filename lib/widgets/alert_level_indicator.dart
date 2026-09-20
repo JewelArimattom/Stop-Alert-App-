@@ -79,7 +79,7 @@ class _AlertLevelIndicatorState extends State<AlertLevelIndicator>
       child: Stack(
         alignment: Alignment.center,
         children: [
-          // Expanding rings
+          // Expanding radar rings
           if (isActive)
             AnimatedBuilder(
               animation: _ringController,
@@ -95,28 +95,25 @@ class _AlertLevelIndicatorState extends State<AlertLevelIndicator>
               },
             ),
 
-          // Glow effect
+          // Central glowing badge
           AnimatedBuilder(
             animation: _glowController,
             builder: (context, _) {
               return Container(
-                width: widget.size * 0.45,
-                height: widget.size * 0.45,
+                width: widget.size * 0.46,
+                height: widget.size * 0.46,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: color.withOpacity(
-                    isActive ? 0.08 + _glowController.value * 0.06 : 0.05,
-                  ),
+                  color: AppColors.card.withOpacity(0.9),
                   border: Border.all(
-                    color: color.withOpacity(isActive ? 0.4 : 0.15),
+                    color: color.withOpacity(isActive ? 0.7 : 0.25),
                     width: 2,
                   ),
                   boxShadow: isActive
                       ? [
                           BoxShadow(
-                            color: color.withOpacity(
-                                0.15 + _glowController.value * 0.1),
-                            blurRadius: 16,
+                            color: color.withOpacity(0.3 + _glowController.value * 0.2),
+                            blurRadius: 18,
                             spreadRadius: 3,
                           ),
                         ]
@@ -125,7 +122,7 @@ class _AlertLevelIndicatorState extends State<AlertLevelIndicator>
                 child: Icon(
                   _getIcon(),
                   color: color,
-                  size: widget.size * 0.2,
+                  size: widget.size * 0.22,
                 ),
               );
             },
@@ -133,21 +130,6 @@ class _AlertLevelIndicatorState extends State<AlertLevelIndicator>
         ],
       ),
     );
-  }
-}
-
-class AnimatedBuilder extends AnimatedWidget {
-  final Widget Function(BuildContext, Widget?) builder;
-
-  const AnimatedBuilder({
-    super.key,
-    required Animation<double> animation,
-    required this.builder,
-  }) : super(listenable: animation);
-
-  @override
-  Widget build(BuildContext context) {
-    return builder(context, null);
   }
 }
 
@@ -171,12 +153,12 @@ class RingPainter extends CustomPainter {
       final offset = i / rings;
       final ringProgress = (progress + offset) % 1.0;
       final radius = maxRadius * 0.3 + (maxRadius * 0.7) * ringProgress;
-      final opacity = (1.0 - ringProgress) * 0.3;
+      final opacity = (1.0 - ringProgress) * 0.4;
 
       final paint = Paint()
         ..color = color.withOpacity(opacity)
         ..style = PaintingStyle.stroke
-        ..strokeWidth = 1.5;
+        ..strokeWidth = 1.8;
 
       canvas.drawCircle(center, radius, paint);
     }

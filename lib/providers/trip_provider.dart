@@ -232,7 +232,22 @@ class TripProvider extends ChangeNotifier {
       _activeTrip!.completedAt = DateTime.now();
       StorageService.updateTrip(_activeTrip!);
     }
-    // Don't stop tracking immediately — keep alarm going until user dismisses
+    // Auto-stop background service after arrival with a brief delay
+    Future.delayed(const Duration(seconds: 3), () async {
+      await _stopBackgroundService();
+    });
+  }
+
+  Future<void> _stopBackgroundService() async {
+    _locationEngine.stopTracking();
+    _positionSub?.cancel();
+    _speedSub?.cancel();
+    _geofenceEngine.reset();
+    _travelDetectionEngine.reset();
+    if (await BackgroundEngine.isRunning()) {
+      await BackgroundEngine.stop();
+    }
+    _backgroundAlertsActive = false;
   }
 
   Future<void> _handleDistanceMilestones(double distanceMeters) async {

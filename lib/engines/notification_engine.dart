@@ -5,6 +5,7 @@ import 'package:vibration/vibration.dart';
 import '../models/tracking_state.dart';
 import '../utils/constants.dart';
 import '../services/audio_service.dart';
+import '../services/storage_service.dart';
 
 class NotificationEngine {
   final FlutterLocalNotificationsPlugin _notifications =
@@ -14,7 +15,16 @@ class NotificationEngine {
 
   bool get isAlarmRinging => _audioService.isPlaying;
 
+  void setCustomAlarmPath(String? path) {
+    _audioService.setCustomAlarmPath(path);
+  }
+
   Future<void> initialize({bool requestPermissions = true}) async {
+    final customPath = StorageService.getSetting<String>('customAlarmPath');
+    if (customPath != null) {
+      _audioService.setCustomAlarmPath(customPath);
+    }
+
     const androidSettings =
         AndroidInitializationSettings('@mipmap/ic_launcher');
     const initSettings = InitializationSettings(android: androidSettings);

@@ -177,7 +177,7 @@ class HistoryScreen extends StatelessWidget {
             color: AppColors.textMuted.withOpacity(0.3),
           ),
           const SizedBox(height: 16),
-          Text(
+          const Text(
             'No trips yet',
             style: TextStyle(
               color: AppColors.textMuted,

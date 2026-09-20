@@ -189,7 +189,7 @@ class _HomeScreenState extends State<HomeScreen>
                 color: Colors.white, size: 22),
           ),
           const SizedBox(width: 12),
-          Column(
+          const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -292,25 +292,6 @@ class _HomeScreenState extends State<HomeScreen>
               bottom: 12,
               child: _buildRecenterButton(),
             ),
-            // Gradient overlay at bottom
-            Positioned(
-              bottom: 0,
-              left: 0,
-              right: 0,
-              height: 60,
-              child: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      Colors.transparent,
-                      AppColors.background.withOpacity(0.8),
-                    ],
-                  ),
-                ),
-              ),
-            ),
           ],
         ),
       ),
@@ -405,7 +386,7 @@ class _HomeScreenState extends State<HomeScreen>
                   const Icon(Icons.history_rounded,
                       color: AppColors.primary, size: 20),
                   const SizedBox(width: 8),
-                  Text(
+                  const Text(
                     'Recent Trips',
                     style: TextStyle(
                       fontSize: 16,
@@ -422,7 +403,7 @@ class _HomeScreenState extends State<HomeScreen>
                             builder: (_) => const HistoryScreen()),
                       );
                     },
-                    child: Text(
+                    child: const Text(
                       'View all',
                       style: TextStyle(
                         fontSize: 13,
@@ -462,7 +443,7 @@ class _HomeScreenState extends State<HomeScreen>
             color: AppColors.textMuted.withOpacity(0.4),
           ),
           const SizedBox(height: 12),
-          Text(
+          const Text(
             'No trips yet',
             style: TextStyle(
               color: AppColors.textMuted,
@@ -497,9 +478,9 @@ class _HomeScreenState extends State<HomeScreen>
       ),
       child: Row(
         children: [
-          Icon(Icons.navigation_rounded, color: AppColors.primary, size: 20),
+          const Icon(Icons.navigation_rounded, color: AppColors.primary, size: 20),
           const SizedBox(width: 10),
-          Expanded(
+          const Expanded(
             child: Text(
               'Active tracking in progress',
               style: TextStyle(
@@ -511,7 +492,7 @@ class _HomeScreenState extends State<HomeScreen>
           ),
           GestureDetector(
             onTap: _navigateToTracking,
-            child: Text(
+            child: const Text(
               'Open',
               style: TextStyle(
                 color: AppColors.primary,

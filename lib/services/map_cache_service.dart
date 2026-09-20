@@ -6,7 +6,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:flutter_map/flutter_map.dart';
 
 class MapCacheService {
-  static const String _cacheKey = 'stopalert_tiles';
+  static const String _cacheKey = 'stopalert_mapbox_tiles';
   static final CacheManager _cacheManager = CacheManager(
     Config(
       _cacheKey,
@@ -26,12 +26,10 @@ class MapCacheService {
 
 class _CachedTileProvider extends TileProvider {
   final BaseCacheManager cacheManager;
-  final bool silenceExceptions;
+  final bool silenceExceptions = true;
 
   _CachedTileProvider({
     required this.cacheManager,
-    this.silenceExceptions = true,
-    super.headers,
   });
 
   @override

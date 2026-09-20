@@ -3,6 +3,7 @@ import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../utils/constants.dart';
 import '../services/map_cache_service.dart';
+import '../services/mapbox_service.dart';
 
 class MapWidget extends StatelessWidget {
   final MapController? controller;
@@ -13,6 +14,11 @@ class MapWidget extends StatelessWidget {
   final double? geofenceRadius;
   final Function(TapPosition, LatLng)? onTap;
   final bool showRoute;
+  final bool isDarkMode;
+
+  /// Road-following route points from Mapbox Directions API.
+  /// When provided, these are used instead of a straight line.
+  final List<LatLng>? routePoints;
 
   const MapWidget({
     super.key,
@@ -24,11 +30,24 @@ class MapWidget extends StatelessWidget {
     this.geofenceRadius,
     this.onTap,
     this.showRoute = false,
+    this.isDarkMode = false,
+    this.routePoints,
   });
 
   @override
   Widget build(BuildContext context) {
     final tileProvider = MapCacheService.tileProvider;
+
+    // Build the polyline points: use Mapbox route if available, else straight line
+    final List<LatLng> polylinePoints;
+    if (routePoints != null && routePoints!.isNotEmpty) {
+      polylinePoints = routePoints!;
+    } else if (currentPosition != null && destination != null) {
+      polylinePoints = [currentPosition!, destination!];
+    } else {
+      polylinePoints = [];
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(0),
       child: FlutterMap(
@@ -41,14 +60,16 @@ class MapWidget extends StatelessWidget {
           minZoom: 3,
         ),
         children: [
-          // Clean bright map tiles — no dark overlay
+          // Mapbox streets tile layer — premium look
           TileLayer(
-            urlTemplate: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png',
+            urlTemplate: MapboxService.tileUrlTemplate,
             userAgentPackageName: 'com.stopalert.app',
             tileProvider: tileProvider,
+            maxZoom: 18,
+            // No color filter needed — Mapbox streets-v12 looks great natively
           ),
 
-          // Geofence circle
+          // Geofence circle with green glow
           if (destination != null && geofenceRadius != null)
             CircleLayer(
               circles: [
@@ -56,22 +77,28 @@ class MapWidget extends StatelessWidget {
                   point: destination!,
                   radius: geofenceRadius!,
                   useRadiusInMeter: true,
-                  color: AppColors.primary.withOpacity(0.12),
-                  borderColor: AppColors.primary.withOpacity(0.6),
-                  borderStrokeWidth: 2.5,
+                  color: AppColors.primary.withOpacity(0.10),
+                  borderColor: AppColors.primary.withOpacity(0.5),
+                  borderStrokeWidth: 2.0,
                 ),
               ],
             ),
 
-          // Route line
-          if (showRoute && currentPosition != null && destination != null)
+          // Route polyline — road-following green line
+          if (showRoute && polylinePoints.length >= 2)
             PolylineLayer(
               polylines: [
+                // Glow / shadow layer
                 Polyline(
-                  points: [currentPosition!, destination!],
-                  color: AppColors.primary.withOpacity(0.7),
-                  strokeWidth: 4,
-                  pattern: const StrokePattern.dotted(),
+                  points: polylinePoints,
+                  color: AppColors.primary.withOpacity(0.18),
+                  strokeWidth: 10,
+                ),
+                // Main solid route line
+                Polyline(
+                  points: polylinePoints,
+                  color: AppColors.primary,
+                  strokeWidth: 4.5,
                 ),
               ],
             ),
@@ -79,51 +106,72 @@ class MapWidget extends StatelessWidget {
           // Markers
           MarkerLayer(
             markers: [
-              // Current position marker
+              // Current position marker — blue dot with pulse ring
               if (currentPosition != null)
                 Marker(
                   point: currentPosition!,
-                  width: 32,
-                  height: 32,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.info,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.info.withOpacity(0.35),
-                          blurRadius: 12,
-                          spreadRadius: 3,
+                  width: 44,
+                  height: 44,
+                  child: Center(
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Container(
+                          width: 38,
+                          height: 38,
+                          decoration: BoxDecoration(
+                            color: AppColors.info.withOpacity(0.15),
+                            shape: BoxShape.circle,
+                          ),
+                        ),
+                        Container(
+                          width: 22,
+                          height: 22,
+                          decoration: BoxDecoration(
+                            color: AppColors.info,
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                            boxShadow: [
+                              BoxShadow(
+                                color: AppColors.info.withOpacity(0.5),
+                                blurRadius: 10,
+                                spreadRadius: 2,
+                              ),
+                            ],
+                          ),
                         ),
                       ],
                     ),
                   ),
                 ),
 
-              // Destination marker
+              // Destination marker — green pin badge
               if (destination != null)
                 Marker(
                   point: destination!,
-                  width: 44,
-                  height: 44,
-                  child: Container(
-                    decoration: BoxDecoration(
-                      color: AppColors.danger,
-                      shape: BoxShape.circle,
-                      border: Border.all(color: Colors.white, width: 3.5),
-                      boxShadow: [
-                        BoxShadow(
-                          color: AppColors.danger.withOpacity(0.35),
-                          blurRadius: 12,
-                          spreadRadius: 3,
-                        ),
-                      ],
-                    ),
-                    child: const Icon(
-                      Icons.flag_rounded,
-                      color: Colors.white,
-                      size: 22,
+                  width: 50,
+                  height: 50,
+                  child: Center(
+                    child: Container(
+                      width: 42,
+                      height: 42,
+                      decoration: BoxDecoration(
+                        gradient: AppColors.primaryGradient,
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white, width: 2.5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.primary.withOpacity(0.4),
+                            blurRadius: 12,
+                            spreadRadius: 3,
+                          ),
+                        ],
+                      ),
+                      child: const Icon(
+                        Icons.location_on_rounded,
+                        color: Colors.white,
+                        size: 24,
+                      ),
                     ),
                   ),
                 ),
