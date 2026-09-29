@@ -3,42 +3,39 @@ import 'package:flutter/foundation.dart';
 import 'package:http/http.dart' as http;
 import 'package:latlong2/latlong.dart';
 
-/// Service for Mapbox API interactions: tiles and directions.
+/// Service for map API interactions: OSM tiles and OSRM directions.
+/// All APIs used are completely free and require no API key.
 class MapboxService {
   MapboxService._();
 
-  /// Mapbox public access token (can be overridden via --dart-define=MAPBOX_ACCESS_TOKEN=...)
-  static String get accessToken {
-    const envToken = String.fromEnvironment('MAPBOX_ACCESS_TOKEN');
-    if (envToken.isNotEmpty) return envToken;
-    return utf8.decode(base64.decode(
-      'cGsuZXlKMUlqb2lhbVYzWld3ek1ETWlMQ0poSWpvaVkyMTFPVzE0TnpWdU1IRjBaako1Y1haMlpIbDFjREZxWVNKOS45RXBvek82ZTNQZXE3VmFpWE55VHVB',
-    ));
-  }
-
-  /// Mapbox raster tile URL template for flutter_map's TileLayer
+  /// Modern, beautiful, free raster tile URL template (CartoDB Voyager).
+  /// Powered by OpenStreetMap data, global high-speed CDN, completely free.
   static String get tileUrlTemplate =>
-      'https://api.mapbox.com/styles/v1/mapbox/streets-v12/tiles/{z}/{x}/{y}@2x?access_token=$accessToken';
+      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
 
-  // ─── Directions API ──────────────────────────────────────────────
+  /// CDN subdomains for tile balancing
+  static List<String> get tileSubdomains => const ['a', 'b', 'c', 'd'];
 
-  /// Fetch a driving route between [origin] and [destination].
+  // ─── Directions API (OSRM – free, no key) ────────────────────────
+
+  /// Fetch a driving route between [origin] and [destination]
+  /// using the OSRM public routing API.
   ///
   /// Returns a [MapboxRoute] with polyline points, distance, and duration.
   /// Returns `null` on failure (no connectivity, bad response, etc.).
   static Future<MapboxRoute?> getRoute(LatLng origin, LatLng destination) async {
     try {
       final url = Uri.parse(
-        'https://api.mapbox.com/directions/v5/mapbox/driving/'
+        'https://router.project-osrm.org/route/v1/driving/'
         '${origin.longitude},${origin.latitude};'
         '${destination.longitude},${destination.latitude}'
-        '?geometries=polyline6&overview=full&access_token=$accessToken',
+        '?overview=full&geometries=polyline',
       );
 
       final response = await http.get(url).timeout(const Duration(seconds: 10));
 
       if (response.statusCode != 200) {
-        debugPrint('MapboxService: Directions API returned ${response.statusCode}');
+        debugPrint('MapService: OSRM API returned ${response.statusCode}');
         return null;
       }
 
@@ -46,7 +43,7 @@ class MapboxService {
       final routes = data['routes'] as List?;
 
       if (routes == null || routes.isEmpty) {
-        debugPrint('MapboxService: No routes returned');
+        debugPrint('MapService: No routes returned');
         return null;
       }
 
@@ -57,7 +54,8 @@ class MapboxService {
 
       if (geometry == null) return null;
 
-      final points = _decodePolyline6(geometry);
+      // OSRM uses standard polyline encoding (precision 5)
+      final points = _decodePolyline5(geometry);
 
       if (points.isEmpty) return null;
 
@@ -67,16 +65,16 @@ class MapboxService {
         durationSeconds: duration,
       );
     } catch (e) {
-      debugPrint('MapboxService: Route fetch failed: $e');
+      debugPrint('MapService: Route fetch failed: $e');
       return null;
     }
   }
 
-  // ─── Polyline Decoder (precision 6) ──────────────────────────────
+  // ─── Polyline Decoder (precision 5 – standard Google/OSRM) ───────
 
-  /// Decode an encoded polyline string with precision 6 (Mapbox default
-  /// when `geometries=polyline6` is specified).
-  static List<LatLng> _decodePolyline6(String encoded) {
+  /// Decode an encoded polyline string with precision 5 (standard encoding
+  /// used by Google Maps, OSRM, and most routing services).
+  static List<LatLng> _decodePolyline5(String encoded) {
     final points = <LatLng>[];
     int index = 0;
     int lat = 0;
@@ -104,15 +102,15 @@ class MapboxService {
       } while (byte >= 0x20);
       lng += (result & 1) != 0 ? ~(result >> 1) : (result >> 1);
 
-      // Precision 6: divide by 1e6
-      points.add(LatLng(lat / 1e6, lng / 1e6));
+      // Precision 5: divide by 1e5
+      points.add(LatLng(lat / 1e5, lng / 1e5));
     }
 
     return points;
   }
 }
 
-/// A decoded Mapbox route.
+/// A decoded route.
 class MapboxRoute {
   /// The list of LatLng points forming the route polyline.
   final List<LatLng> points;

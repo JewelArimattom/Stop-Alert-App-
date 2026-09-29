@@ -70,10 +70,14 @@ class _HomeScreenState extends State<HomeScreen>
       _loading = false;
     });
     if (shouldRecenter && pos != null) {
-      final zoom =
-          (_mapController.camera.zoom == 0 ? 14 : _mapController.camera.zoom)
-              .toDouble();
-      _mapController.move(pos, zoom);
+      try {
+        final zoom =
+            (_mapController.camera.zoom == 0 ? 14 : _mapController.camera.zoom)
+                .toDouble();
+        _mapController.move(pos, zoom);
+      } catch (_) {
+        // MapController not ready yet — will recenter on next poll
+      }
     }
   }
 

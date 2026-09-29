@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_map/flutter_map.dart';
 import 'package:latlong2/latlong.dart';
 import '../utils/constants.dart';
-import '../services/map_cache_service.dart';
 import '../services/mapbox_service.dart';
 
 class MapWidget extends StatelessWidget {
@@ -36,9 +35,7 @@ class MapWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final tileProvider = MapCacheService.tileProvider;
-
-    // Build the polyline points: use Mapbox route if available, else straight line
+    // Build the polyline points: use route if available, else straight line
     final List<LatLng> polylinePoints;
     if (routePoints != null && routePoints!.isNotEmpty) {
       polylinePoints = routePoints!;
@@ -60,13 +57,15 @@ class MapWidget extends StatelessWidget {
           minZoom: 3,
         ),
         children: [
-          // Mapbox streets tile layer — premium look
+          // Modern CartoDB Voyager map tile layer — fast, free, no API key
           TileLayer(
             urlTemplate: MapboxService.tileUrlTemplate,
-            userAgentPackageName: 'com.stopalert.app',
-            tileProvider: tileProvider,
-            maxZoom: 18,
-            // No color filter needed — Mapbox streets-v12 looks great natively
+            subdomains: MapboxService.tileSubdomains,
+            userAgentPackageName: 'com.stopalert.stop_alert',
+            maxZoom: 20,
+            errorTileCallback: (tile, error, stackTrace) {
+              debugPrint('TILE ERROR: $error (URL: ${tile.coordinates})');
+            },
           ),
 
           // Geofence circle with green glow

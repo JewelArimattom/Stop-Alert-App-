@@ -128,8 +128,8 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
 
     setState(() => _searching = true);
 
+    // 1. Try Photon API first (fuzzy autocomplete & proximity ranking)
     try {
-      // 1. Try Photon API first for fuzzy autocomplete & proximity ranking
       final queryParams = <String, String>{
         'q': trimmed,
         'limit': '10',
@@ -143,7 +143,7 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
       final photonResponse = await http.get(
         photonUri,
         headers: {'User-Agent': 'StopAlert/1.0'},
-      ).timeout(const Duration(seconds: 5));
+      ).timeout(const Duration(seconds: 8));
 
       if (photonResponse.statusCode == 200) {
         final data = jsonDecode(utf8.decode(photonResponse.bodyBytes)) as Map<String, dynamic>;
@@ -170,6 +170,9 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
               final parts = <String>[];
               if (props['city'] != null && props['city'] != name) {
                 parts.add(props['city'].toString());
+              }
+              if (props['county'] != null && props['county'] != name) {
+                parts.add(props['county'].toString());
               } else if (props['district'] != null && props['district'] != name) {
                 parts.add(props['district'].toString());
               }
@@ -197,6 +200,11 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
           }
 
           if (results.isNotEmpty && mounted) {
+            if (widget.currentPosition != null) {
+              results.sort((a, b) =>
+                  (a.distanceMeters ?? double.infinity)
+                      .compareTo(b.distanceMeters ?? double.infinity));
+            }
             setState(() {
               _searchResults = results;
               _searching = false;
@@ -205,22 +213,85 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
           }
         }
       }
-    } catch (_) {
-      // Fall through to Nominatim fallback
+    } catch (e) {
+      debugPrint('Photon search failed: $e');
     }
 
-    // Fallback to Nominatim if Photon has no results or errors
+    // 2. Try Open-Meteo Geocoding API (ultra-fast CDN, zero rate limit, cities/towns)
+    try {
+      final meteoUri = Uri.https('geocoding-api.open-meteo.com', '/v1/search', {
+        'name': trimmed,
+        'count': '10',
+        'language': 'en',
+        'format': 'json',
+      });
+      final meteoResponse = await http.get(meteoUri).timeout(const Duration(seconds: 5));
+
+      if (meteoResponse.statusCode == 200) {
+        final data = jsonDecode(utf8.decode(meteoResponse.bodyBytes)) as Map<String, dynamic>;
+        final items = data['results'] as List? ?? [];
+
+        if (items.isNotEmpty) {
+          final results = <_SearchResult>[];
+          for (final item in items) {
+            final lat = (item['latitude'] as num?)?.toDouble();
+            final lon = (item['longitude'] as num?)?.toDouble();
+            final name = item['name']?.toString() ?? '';
+            if (lat == null || lon == null || name.isEmpty) continue;
+
+            final pos = LatLng(lat, lon);
+            final parts = <String>[];
+            if (item['admin2'] != null && item['admin2'] != name) {
+              parts.add(item['admin2'].toString());
+            }
+            if (item['admin1'] != null) parts.add(item['admin1'].toString());
+            if (item['country'] != null) parts.add(item['country'].toString());
+            final subtitle = parts.join(', ');
+
+            double? dist;
+            if (widget.currentPosition != null) {
+              dist = DistanceEngine.calculateDistance(widget.currentPosition!, pos);
+            }
+
+            results.add(_SearchResult(
+              title: name,
+              subtitle: subtitle.isNotEmpty ? subtitle : 'City / Place',
+              category: 'city',
+              position: pos,
+              distanceMeters: dist,
+            ));
+          }
+
+          if (results.isNotEmpty && mounted) {
+            if (widget.currentPosition != null) {
+              results.sort((a, b) =>
+                  (a.distanceMeters ?? double.infinity)
+                      .compareTo(b.distanceMeters ?? double.infinity));
+            }
+            setState(() {
+              _searchResults = results;
+              _searching = false;
+            });
+            return;
+          }
+        }
+      }
+    } catch (e) {
+      debugPrint('Open-Meteo search failed: $e');
+    }
+
+    // 3. Fallback to Nominatim if both previous engines returned nothing
     try {
       final nominatimUri = Uri.https('nominatim.openstreetmap.org', '/search', {
         'q': trimmed,
         'format': 'jsonv2',
-        'limit': '6',
+        'limit': '8',
         'addressdetails': '1',
       });
       final nomResponse = await http.get(
         nominatimUri,
         headers: {'User-Agent': 'StopAlert/1.0 (stopalert app)'},
-      ).timeout(const Duration(seconds: 5));
+      ).timeout(const Duration(seconds: 8));
 
       if (!mounted) return;
 
@@ -248,13 +319,21 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
           ));
         }
 
+        if (widget.currentPosition != null) {
+          results.sort((a, b) =>
+              (a.distanceMeters ?? double.infinity)
+                  .compareTo(b.distanceMeters ?? double.infinity));
+        }
+
         setState(() {
           _searchResults = results;
           _searching = false;
         });
         return;
       }
-    } catch (_) {}
+    } catch (e) {
+      debugPrint('Nominatim search failed: $e');
+    }
 
     if (mounted) {
       setState(() {
@@ -465,6 +544,11 @@ class _SetDestinationScreenState extends State<SetDestinationScreen> {
         controller: _searchController,
         focusNode: _searchFocus,
         onChanged: _onSearchChanged,
+        textInputAction: TextInputAction.search,
+        onSubmitted: (query) {
+          _searchDebounce?.cancel();
+          _searchLocations(query);
+        },
         style: const TextStyle(
           color: AppColors.textPrimary,
           fontSize: 15,
