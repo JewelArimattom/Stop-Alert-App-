@@ -8,13 +8,13 @@ import 'package:latlong2/latlong.dart';
 class MapboxService {
   MapboxService._();
 
-  /// Modern, beautiful, free raster tile URL template (CartoDB Voyager).
-  /// Powered by OpenStreetMap data, global high-speed CDN, completely free.
+  /// Free OpenStreetMap tile URL (OSM France community mirror).
+  /// No API key required, no watermarks, reliable CDN.
   static String get tileUrlTemplate =>
-      'https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}.png';
+      'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
 
-  /// CDN subdomains for tile balancing
-  static List<String> get tileSubdomains => const ['a', 'b', 'c', 'd'];
+  /// Subdomains for tile load balancing
+  static List<String> get tileSubdomains => const ['a', 'b', 'c'];
 
   // ─── Directions API (OSRM – free, no key) ────────────────────────
 
