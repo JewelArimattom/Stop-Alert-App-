@@ -3,386 +3,89 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>StopAlert Premium | Smart Bus & Train Stop Alerts</title>
-  <meta
-    name="description"
-    content="StopAlert Premium helps bus and train commuters reach their destination safely with smart 1 km, 300 m, and arrival alerts."
-  />
+  <meta name="theme-color" content="#05060a" />
+  <title>StopAlert | Never miss your stop</title>
+  <meta name="description" content="A smarter commute companion. Set your stop and get timely alerts before you arrive." />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link
-    href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap"
-    rel="stylesheet"
-  />
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <link rel="icon" type="image/png" href="assets/logo.png" />
   <link rel="stylesheet" href="styles.css" />
 </head>
 <body>
-  <div class="bg-orb orb-a" aria-hidden="true"></div>
-  <div class="bg-orb orb-b" aria-hidden="true"></div>
-  <div class="bg-grid" aria-hidden="true"></div>
-
+  <div class="scroll-progress" aria-hidden="true"><span class="scroll-progress-bar"></span></div>
   <header class="site-header">
-    <div class="container nav-shell reveal" data-delay="40">
-      <a class="brand" href="#top" aria-label="StopAlert Premium Home">
-        <img src="assets/logo.png" alt="StopAlert Premium logo" />
-        <div>
-          <strong>StopAlert Premium</strong>
-          <span>Smart commute alarm app</span>
-        </div>
-      </a>
-
-      <nav class="top-links" aria-label="Primary">
-        <a href="#features">Features</a>
-        <a href="#how">How it works</a>
-        <a href="#download">Download</a>
+    <div class="container nav-shell">
+      <a class="brand" href="#top" aria-label="StopAlert home"><img src="assets/logo.png" alt="" /><strong>STOPALERT<span class="brand-period">.</span></strong></a>
+      <nav class="top-links" aria-label="Primary navigation">
+        <a href="#features">Features</a><a href="#how">The journey</a><a href="#download">Download</a>
       </nav>
-
-      <a class="button primary track-download" href="downloads/StopAlert-Premium-v1.0.0.apk" download>Get APK</a>
+      <a class="button primary track-download nav-cta" href="downloads/StopAlert-v1.0.0.apk" download>Get the app <span aria-hidden="true">↗</span></a>
     </div>
   </header>
 
   <main id="top">
-    <section class="hero container">
-      <div class="hero-copy reveal" data-delay="90">
-        <p class="eyebrow">PREMIUM COMMUTE SAFETY</p>
-        <h1>Ride relaxed. Stop exactly where you planned.</h1>
-        <p class="lead">
-          StopAlert Premium tracks your route and keeps alarms ringing even when the
-          screen is off. After you set a stop, tracking and alerts keep working offline
-          so you never miss your bus or train.
-        </p>
-
-        <div class="hero-actions">
-          <a id="download-btn" class="button primary track-download" href="downloads/StopAlert-Premium-v1.0.0.apk" download>
-            Download Android APK
-          </a>
-          <a class="button text" href="#install">Install guide</a>
-        </div>
-        <p id="live-cta" class="live-cta" aria-live="polite">
-          <span class="live-dot"></span>
-          Fast install, no sign-up, and ready for your next ride.
-        </p>
-
-        <ul class="trust-list" aria-label="Product highlights">
-          <li>
-            <span>Screen-off alarms</span>
-            <strong>Keeps ringing when locked</strong>
-          </li>
-          <li>
-            <span>Offline-ready tracking</span>
-            <strong>Works after you set a stop</strong>
-          </li>
-          <li>
-            <span>Privacy by default</span>
-            <strong>On-device processing</strong>
-          </li>
-        </ul>
+    <section class="hero" aria-labelledby="hero-title">
+      <div class="hero-atmosphere" aria-hidden="true"></div>
+      <svg class="hero-route-art" viewBox="0 0 600 700" fill="none" aria-hidden="true"><path class="hero-route-glow" d="M478 18C420 114 495 186 413 263S335 382 392 448s-46 129-183 224"/><path class="hero-route-line" d="M478 18C420 114 495 186 413 263S335 382 392 448s-46 129-183 224"/><circle cx="478" cy="18" r="5"/><circle cx="413" cy="263" r="4"/><circle cx="392" cy="448" r="4"/><circle cx="209" cy="672" r="7"/></svg>
+      <div class="hero-copy">
+        <p class="eyebrow"><span class="live-dot"></span> YOUR JOURNEY, IN GOOD HANDS</p>
+        <h1 id="hero-title"><span>YOUR STOP.</span><span>RIGHT ON TIME.</span></h1>
+        <p class="lead">Never miss your stop again.</p>
+        <p class="hero-detail">Set a destination. Settle into the ride.<br />StopAlert follows the route and gives you time to get ready.</p>
+        <div class="hero-actions"><a class="button primary track-download" href="downloads/StopAlert-v1.0.0.apk" download>Download the app <span aria-hidden="true">↗</span></a><a class="button text" href="#how">Explore the journey <span aria-hidden="true">↓</span></a></div>
       </div>
+      <div class="hero-hud hud-one" aria-label="Tracking active. Location locked. Offline ready."><strong><i class="status-light"></i> TRACKING ACTIVE</strong><small>LOCATION LOCKED · OFFLINE READY</small></div>
+      <div class="scroll-cue" aria-hidden="true"><span>SCROLL TO EXPLORE</span><i></i></div>
+    </section>
 
-      <div class="hero-visual reveal" data-delay="160">
-        <article class="phone-frame" aria-label="App preview mockup">
-          <p class="status-pill">LIVE ROUTE</p>
-          <div class="route-map">
-            <!-- SVG Map with streets and landmarks -->
-            <svg viewBox="0 0 300 280" fill="none" xmlns="http://www.w3.org/2000/svg" style="position:absolute;inset:0;width:100%;height:100%;z-index:1;">
-              <!-- Water body -->
-              <ellipse cx="240" cy="220" rx="80" ry="45" fill="#d1e9f6" opacity="0.5"/>
-              
-              <!-- Parks / green areas -->
-              <rect x="15" y="30" width="50" height="35" rx="6" fill="#d5edda" opacity="0.7"/>
-              <rect x="200" y="60" width="40" height="28" rx="5" fill="#d5edda" opacity="0.6"/>
-              <rect x="60" y="180" width="35" height="30" rx="5" fill="#d5edda" opacity="0.5"/>
-              
-              <!-- Buildings -->
-              <rect x="70" y="32" width="18" height="14" rx="2" fill="#d6dde5" opacity="0.7"/>
-              <rect x="93" y="30" width="22" height="18" rx="2" fill="#cdd5de" opacity="0.7"/>
-              <rect x="120" y="34" width="16" height="12" rx="2" fill="#d6dde5" opacity="0.6"/>
-              <rect x="20" y="80" width="28" height="20" rx="2" fill="#cdd5de" opacity="0.6"/>
-              <rect x="55" y="76" width="20" height="16" rx="2" fill="#d6dde5" opacity="0.65"/>
-              <rect x="170" y="40" width="24" height="18" rx="2" fill="#cdd5de" opacity="0.6"/>
-              <rect x="245" y="30" width="18" height="22" rx="2" fill="#d6dde5" opacity="0.5"/>
-              <rect x="30" y="120" width="22" height="16" rx="2" fill="#cdd5de" opacity="0.55"/>
-              <rect x="100" y="110" width="30" height="22" rx="2" fill="#d6dde5" opacity="0.6"/>
-              <rect x="180" y="120" width="20" height="14" rx="2" fill="#cdd5de" opacity="0.5"/>
-              <rect x="220" y="100" width="26" height="20" rx="2" fill="#d6dde5" opacity="0.55"/>
-              <rect x="140" y="170" width="22" height="16" rx="2" fill="#cdd5de" opacity="0.5"/>
-              <rect x="200" y="160" width="18" height="20" rx="2" fill="#d6dde5" opacity="0.5"/>
-              <rect x="110" y="220" width="25" height="18" rx="2" fill="#cdd5de" opacity="0.5"/>
-              <rect x="160" y="230" width="20" height="14" rx="2" fill="#d6dde5" opacity="0.45"/>
-              
-              <!-- Main roads -->
-              <line x1="0" y1="68" x2="300" y2="68" stroke="#c9d3dd" stroke-width="3"/>
-              <line x1="0" y1="150" x2="300" y2="150" stroke="#c9d3dd" stroke-width="3"/>
-              <line x1="0" y1="210" x2="300" y2="210" stroke="#c9d3dd" stroke-width="2.5"/>
-              <line x1="150" y1="0" x2="150" y2="280" stroke="#c9d3dd" stroke-width="3"/>
-              <line x1="80" y1="0" x2="80" y2="280" stroke="#c9d3dd" stroke-width="2.5"/>
-              <line x1="250" y1="0" x2="250" y2="280" stroke="#c9d3dd" stroke-width="2"/>
-              
-              <!-- Secondary roads -->
-              <line x1="0" y1="105" x2="300" y2="105" stroke="#d8e0e8" stroke-width="1.5"/>
-              <line x1="0" y1="250" x2="300" y2="250" stroke="#d8e0e8" stroke-width="1.5"/>
-              <line x1="40" y1="0" x2="40" y2="280" stroke="#d8e0e8" stroke-width="1.5"/>
-              <line x1="200" y1="0" x2="200" y2="280" stroke="#d8e0e8" stroke-width="1.5"/>
-              
-              <!-- Route path with glow -->
-              <path d="M150 30 L150 68 L150 105 Q150 120 140 135 L120 150 Q105 160 105 180 L105 210 Q105 230 120 245 L150 260" 
-                    stroke="#2563eb" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round" opacity="0.15" filter="url(#glow)"/>
-              <path d="M150 30 L150 68 L150 105 Q150 120 140 135 L120 150 Q105 160 105 180 L105 210 Q105 230 120 245 L150 260" 
-                    stroke="#2563eb" stroke-width="3" fill="none" stroke-linecap="round" stroke-linejoin="round" 
-                    stroke-dasharray="8 5" opacity="0.85">
-                <animate attributeName="stroke-dashoffset" from="0" to="-26" dur="1.5s" repeatCount="indefinite"/>
-              </path>
-              
-              <!-- Glow filter -->
-              <defs>
-                <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
-                  <feGaussianBlur in="SourceGraphic" stdDeviation="6"/>
-                </filter>
-              </defs>
-              
-              <!-- Start marker -->
-              <circle cx="150" cy="30" r="7" fill="#10b981" stroke="#fff" stroke-width="3"/>
-              <circle cx="150" cy="30" r="14" fill="none" stroke="#10b981" stroke-width="1" opacity="0.3">
-                <animate attributeName="r" values="14;22;14" dur="2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.3;0;0.3" dur="2s" repeatCount="indefinite"/>
-              </circle>
-              <rect x="160" y="20" width="42" height="20" rx="5" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
-              <text x="170" y="34" font-size="8" font-weight="700" fill="#10b981" font-family="system-ui">Start</text>
-              
-              <!-- 1km alert marker -->
-              <circle cx="120" cy="150" r="7" fill="#f59e0b" stroke="#fff" stroke-width="3"/>
-              <circle cx="120" cy="150" r="14" fill="none" stroke="#f59e0b" stroke-width="1" opacity="0.3">
-                <animate attributeName="r" values="14;20;14" dur="2.5s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.3;0;0.3" dur="2.5s" repeatCount="indefinite"/>
-              </circle>
-              <rect x="60" y="139" width="52" height="20" rx="5" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
-              <text x="67" y="153" font-size="8" font-weight="700" fill="#f59e0b" font-family="system-ui">1 km alert</text>
-              
-              <!-- Destination marker -->
-              <circle cx="150" cy="260" r="8" fill="#ef4444" stroke="#fff" stroke-width="3"/>
-              <circle cx="150" cy="260" r="16" fill="none" stroke="#ef4444" stroke-width="1.5" opacity="0.25">
-                <animate attributeName="r" values="16;28;16" dur="2s" repeatCount="indefinite"/>
-                <animate attributeName="opacity" values="0.25;0;0.25" dur="2s" repeatCount="indefinite"/>
-              </circle>
-              <circle cx="150" cy="260" r="24" fill="none" stroke="#ef4444" stroke-width="1" opacity="0.12">
-                <animate attributeName="r" values="24;38;24" dur="2s" repeatCount="indefinite" begin="0.5s"/>
-                <animate attributeName="opacity" values="0.12;0;0.12" dur="2s" repeatCount="indefinite" begin="0.5s"/>
-              </circle>
-              <rect x="163" y="249" width="62" height="20" rx="5" fill="#fff" stroke="#e5e7eb" stroke-width="0.5"/>
-              <text x="170" y="263" font-size="8" font-weight="700" fill="#ef4444" font-family="system-ui">Your Stop</text>
-            </svg>
-            
-            <!-- Keep empty spans for CSS compatibility -->
-            <span class="point start" style="display:none"></span>
-            <span class="point mid" style="display:none"></span>
-            <span class="point end" style="display:none"></span>
-            <span class="route-line" style="display:none"></span>
-            <span class="pulse pulse-a" style="display:none"></span>
-            <span class="pulse pulse-b" style="display:none"></span>
-          </div>
-          <div class="distance-panel">
-            <p>Next reminder in</p>
-            <strong>1.0 km</strong>
-            <span>● Alarm + notification armed</span>
-          </div>
-        </article>
-
-        <article class="float-card card-a">
-          <strong>300 m alert</strong>
-          <span>Secondary stop warning</span>
-        </article>
-        <article class="float-card card-b">
-          <strong>Arrival pop-up</strong>
-          <span>Final destination confirmation</span>
-        </article>
+    <section id="how" class="journey" aria-label="A journey with StopAlert">
+      <div class="journey-stage" aria-hidden="true"><canvas id="route-canvas"></canvas><div class="scene-vignette"></div><div class="scene-label scene-top">STOPALERT <span>· LIVE ROUTE SYSTEM</span></div><div class="scene-coordinates">40° 42' 46.8" N<br />ROUTE SYNCED</div><div class="scene-distance"><span id="distance-label">ROUTE ACTIVE</span><strong id="scene-distance-value">1.0 <small>KM</small></strong></div></div>
+      <div class="journey-copy">
+        <article class="journey-chapter" data-progress="0.08"><span class="chapter-index"><b>01</b> SET YOUR STOP</span><h2>A little peace<br />of <em>mind.</em></h2><p>Choose where you’re going. StopAlert starts following the trip, so you can put your phone away and enjoy the ride.</p><div class="chapter-tag"><i></i> DESTINATION SET</div></article>
+        <article class="journey-chapter align-right" data-progress="0.36"><span class="chapter-index"><b>02</b> FIRST ALERT</span><h2>Ready when<br />you <em>are.</em></h2><p>Your 1 km reminder gives you a moment to gather your things and move toward the exit.</p><div class="chapter-tag"><i></i> 1 KM ALERT</div></article>
+        <article class="journey-chapter" data-progress="0.68"><span class="chapter-index"><b>03</b> ALMOST THERE</span><h2>Your stop is<br /><em>close.</em></h2><p>A second alert at 300 m makes the final stretch easier to navigate, even with your screen locked.</p><div class="chapter-tag"><i></i> 300 M ALERT</div></article>
+        <article class="journey-chapter align-right" data-progress="0.94"><span class="chapter-index"><b>04</b> ARRIVAL</span><h2>Right where<br />you <em>belong.</em></h2><p>A clear arrival alert lets you step off with confidence. Your journey, right on time.</p><div class="chapter-tag arrived-tag"><i></i> DESTINATION REACHED</div></article>
       </div>
     </section>
 
-    <section class="metrics container reveal" data-delay="110" aria-label="Performance stats">
-      <article class="metric-card">
-        <p>Commuter sessions protected</p>
-        <h2 class="counter" data-target="12000" data-suffix="+">0</h2>
-        <span>Reliably alerting riders</span>
-      </article>
-      <article class="metric-card">
-        <p>Average alert precision</p>
-        <h2 class="counter" data-target="98" data-suffix="%">0</h2>
-        <span>Timely stop reminders</span>
-      </article>
-      <article class="metric-card">
-        <p>Typical setup time</p>
-        <h2 class="counter" data-target="30" data-suffix="s">0</h2>
-        <span>Seconds to get started</span>
-      </article>
+    <section class="metrics container" aria-label="How StopAlert works">
+      <div class="metric-intro"><p class="eyebrow">MADE FOR THE EVERYDAY JOURNEY</p><h2>Fewer missed stops.<br /><span>More headspace.</span></h2></div>
+      <div class="metric"><strong>GPS BASED</strong><span>Location-aware alerts</span></div>
+      <div class="metric"><strong>OFFLINE</strong><span>Alerts without a connection</span></div>
+      <div class="metric"><strong>NO ACCOUNT</strong><span>Set your stop and go</span></div>
     </section>
 
-    <section class="section container social-proof">
-      <div class="section-head reveal">
-        <p class="eyebrow">COMMUTER VOICES</p>
-        <h2>Why people download StopAlert quickly</h2>
-      </div>
-      <div class="proof-grid">
-        <article class="proof-card reveal" data-delay="30">
-          <p>"Night travel feels safer now. I get the reminder before my stop and never panic."</p>
-          <strong>Daily bus commuter</strong>
-        </article>
-        <article class="proof-card reveal" data-delay="70">
-          <p>"Simple app, no account, and it just works. Installed in under a minute."</p>
-          <strong>College student rider</strong>
-        </article>
-        <article class="proof-card reveal" data-delay="110">
-          <p>"Best part is the 300 m alert. It gives me enough time to be ready at the door."</p>
-          <strong>Train + metro user</strong>
-        </article>
+    <section class="how-steps container" aria-label="Three simple moments"><div class="how-steps-heading"><p class="eyebrow">HOW IT WORKS</p><h2>Three simple moments.</h2></div><div class="step-timeline"><article><span>01</span><strong>SET</strong><p>Choose your destination.</p></article><i aria-hidden="true"></i><article><span>02</span><strong>RIDE</strong><p>Put your phone away.</p></article><i aria-hidden="true"></i><article><span>03</span><strong>ARRIVE</strong><p>Get alerted before your stop.</p></article></div></section>
+
+    <section id="features" class="feature-story">
+      <div class="feature-heading container"><p class="eyebrow">THOUGHTFUL BY DESIGN</p><h2>Built for the moments<br />you don't need to think about.</h2><p>StopAlert handles the quiet part of your journey, so you can focus on where you're going.</p></div>
+      <div class="feature-panels container">
+        <article class="feature-panel screen-panel"><div class="panel-copy"><span class="chapter-index"><b>01</b> SCREEN OFF</span><h3>Put your phone away.<br /><em>Stay in the loop.</em></h3><p>Your reminders keep working while your screen is locked, so you don’t have to keep checking the map.</p></div><div class="screen-demo"><div class="demo-phone" role="img" aria-label="StopAlert map showing your current location, a route, a stop 300 metres away, and an arrival notification"><div class="demo-status"><span>9:41</span><span>● ▮▮  ◒</span></div><div class="demo-appbar"><img src="assets/logo.png" alt="" /><strong>StopAlert</strong><span>•••</span></div><div class="demo-map"><span class="map-road road-one"></span><span class="map-road road-two"></span><span class="map-road road-three"></span><span class="demo-route"></span><i class="demo-you"></i><i class="demo-pin"></i><span class="map-you-label">YOU</span><small class="map-stop-label">STOP</small></div><div class="demo-trip-info"><div><span>NEXT ALERT</span><strong>300 m <small>away</small></strong></div><div class="eta-pill">~ 4 min</div><p>Get ready for your stop</p></div><div class="demo-alert"><i>SA</i><span><b>StopAlert <small>now</small></b><small>Your stop is 300 m away</small><small>Get ready to exit.</small></span></div><div class="screen-dim"></div><div class="alarm-wave"></div></div></div></article>
+        <article class="feature-panel offline-panel"><div class="panel-copy"><span class="chapter-index"><b>02</b> OFFLINE READY</span><h3>Your journey doesn’t<br />depend on a <em>signal.</em></h3><p>Once your destination is set, tracking and alerts continue offline. Your route stays yours.</p></div><div class="offline-demo"><div class="connectivity-row" aria-hidden="true"><span>Wi-Fi <b>—</b></span><span>Mobile <b>—</b></span><span>GPS <b class="gps-ok">✓</b></span></div><div class="demo-phone offline-phone" role="img" aria-label="StopAlert map and tracking remain active while Wi-Fi and mobile data are unavailable"><div class="demo-status"><span>9:41</span><span>● ▮▮  ◒</span></div><div class="demo-appbar"><img src="assets/logo.png" alt="" /><strong>StopAlert</strong><span>•••</span></div><div class="demo-map offline-map"><span class="map-road road-one"></span><span class="map-road road-two"></span><span class="map-road road-three"></span><span class="demo-route"></span><i class="demo-you"></i><i class="demo-pin"></i><span class="map-you-label">YOU</span><small class="map-stop-label">STOP</small></div><div class="offline-phone-status"><strong>OFFLINE</strong><span>Route tracking active</span><ul><li>GPS <b>● Active</b></li><li>Destination <b>● Loaded</b></li><li>Alerts <b>● Ready</b></li></ul></div><div class="offline-notice">No internet connection. StopAlert is still tracking your journey.</div></div></div></article>
+        <article class="feature-panel privacy-panel"><div class="panel-copy"><span class="chapter-index"><b>03</b> YOUR PRIVACY</span><h3>Your route.<br />Your device.<br /><em>Your data.</em></h3><p>Distance checks and alert triggers run on your device. Online route previews use the public OSRM routing service with current and destination coordinates.</p></div><div class="privacy-demo"><div class="demo-phone privacy-phone" aria-label="Location, route and alerts are processed on the device"><div class="demo-status"><span>9:41</span><span>● ▮▮  ◒</span></div><div class="demo-appbar"><img src="assets/logo.png" alt="" /><strong>StopAlert</strong><span>•••</span></div><div class="privacy-phone-heading">ON THIS DEVICE</div><div class="privacy-row"><span>Location</span><b>● Active</b></div><div class="privacy-row"><span>Route distance</span><b>● Active</b></div><div class="privacy-row"><span>Stop alerts</span><b>● Active</b></div><div class="privacy-service"><span>ONLINE ROUTE PREVIEW</span><b>OSRM public routing</b><small>Shares current + destination coordinates when online</small></div><div class="privacy-phone-foot">DISTANCE CHECKS &amp; ALERTS STAY LOCAL</div></div></div></article>
       </div>
     </section>
 
-    <section id="features" class="section container">
-      <div class="section-head reveal">
-        <p class="eyebrow">WHY STOPALERT</p>
-        <h2>Built for real-world public transport</h2>
-      </div>
+    <section class="proof-strip container" aria-label="Designed for real commutes"><strong>DESIGNED FOR REAL COMMUTES</strong><span>BUS</span><span>TRAIN</span><span>METRO</span><span>DAILY RIDES</span></section>
 
-      <div class="feature-grid">
-        <article class="feature-card reveal" data-delay="40">
-          <span class="icon">01</span>
-          <h3>Milestone alarms</h3>
-          <p>The app triggers reminders at 1 km and 300 m so you prepare before your destination arrives.</p>
-        </article>
-        <article class="feature-card reveal" data-delay="90">
-          <span class="icon">02</span>
-          <h3>Arrival confirmation</h3>
-          <p>StopAlert delivers a final pop-up and notification when you actually reach your selected stop.</p>
-        </article>
-        <article class="feature-card reveal" data-delay="140">
-          <span class="icon">03</span>
-          <h3>Screen-off + offline ready</h3>
-          <p>Alarms keep ringing when the phone locks, and tracking continues offline after you set a stop.</p>
-        </article>
-      </div>
+    <section id="download" class="download-scene">
+      <div class="download-glow" aria-hidden="true"></div><div class="download-route" aria-hidden="true"><i></i><i></i><i></i></div>
+      <div class="download-content"><p class="eyebrow">YOUR NEXT RIDE STARTS HERE</p><h2>READY FOR<br />YOUR NEXT RIDE?</h2><p>Stop missing your stop.</p><a id="download-btn" class="button primary track-download" href="downloads/StopAlert-v1.0.0.apk" download>Download for Android <span aria-hidden="true">↗</span></a><span class="download-meta">ANDROID 5+ <i></i> NO ACCOUNT <i></i> VERSION 1.0.0</span></div>
     </section>
 
-    <section id="how" class="section container flow-section">
-      <div class="section-head reveal">
-        <p class="eyebrow">ALERT FLOW</p>
-        <h2>How StopAlert Premium works</h2>
-      </div>
+    <section id="install" class="install-section container"><div><p class="eyebrow">UP AND RUNNING IN A MOMENT</p><h2>Three steps.<br /><em>Then relax.</em></h2></div><ol><li><span>01</span><div><strong>Download the APK</strong><p>Save the install file to your Android device.</p></div></li><li><span>02</span><div><strong>Allow installation</strong><p>Give your browser or file manager permission to install the app.</p></div></li><li><span>03</span><div><strong>Set your destination</strong><p>Open StopAlert, choose your stop, and enjoy the ride.</p></div></li></ol></section>
 
-      <div class="flow-grid">
-        <article class="flow-card reveal" data-delay="40">
-          <span class="num">01</span>
-          <h3>Pick your destination</h3>
-          <p>Open the app and set your intended drop location before the trip begins.</p>
-        </article>
-        <article class="flow-card reveal" data-delay="90">
-          <span class="num">02</span>
-          <h3>Receive distance reminders</h3>
-          <p>During travel, you get the 1 km alert first and the 300 m alert as you approach.</p>
-        </article>
-        <article class="flow-card reveal" data-delay="140">
-          <span class="num">03</span>
-          <h3>Exit confidently</h3>
-          <p>Arrival alert confirms the exact moment to prepare and get off safely.</p>
-        </article>
-      </div>
-    </section>
-
-    <section id="download" class="section container">
-      <article class="download-shell reveal">
-        <div class="download-copy">
-          <p class="eyebrow">ANDROID RELEASE</p>
-          <h2>Download StopAlert Premium v1.0.0</h2>
-          <p>Install directly on Android 5.0+ and share this page with anyone who commutes daily.</p>
-          <ul class="download-reasons" aria-label="Download reasons">
-            <li>No registration required</li>
-            <li>Direct APK file from this page</li>
-            <li>Works well for daily bus and train routes</li>
-          </ul>
-          <div class="download-actions">
-            <a class="button primary track-download" href="downloads/StopAlert-Premium-v1.0.0.apk" download>Download APK</a>
-            <a class="button ghost" href="#install">See install steps</a>
-            <span id="download-count" class="download-note">Downloads from this browser: 0</span>
-          </div>
-        </div>
-
-        <ul class="download-meta">
-          <li><span>Version</span><strong>1.0.0</strong></li>
-          <li><span>APK file</span><strong>StopAlert-Premium-v1.0.0.apk</strong></li>
-          <li><span>Platform</span><strong>Android 5.0+</strong></li>
-        </ul>
-      </article>
-    </section>
-
-    <section id="install" class="section container install-section">
-      <div class="section-head reveal">
-        <p class="eyebrow">QUICK INSTALL</p>
-        <h2>Install in 3 simple steps</h2>
-      </div>
-      <div class="install-grid">
-        <article class="install-card reveal" data-delay="30">
-          <span>01</span>
-          <h3>Download APK</h3>
-          <p>Tap the APK button above and save the file on your device.</p>
-        </article>
-        <article class="install-card reveal" data-delay="70">
-          <span>02</span>
-          <h3>Enable app install</h3>
-          <p>Allow your browser or file manager to install apps from unknown sources.</p>
-        </article>
-        <article class="install-card reveal" data-delay="110">
-          <span>03</span>
-          <h3>Install and start ride</h3>
-          <p>Open the APK, finish installation, and activate alerts before your next trip.</p>
-        </article>
-      </div>
-    </section>
-
-    <section class="section container faq-section">
-      <div class="section-head reveal">
-        <p class="eyebrow">FAQ</p>
-        <h2>Before you download</h2>
-      </div>
-      <div class="faq-list">
-        <details class="faq-item reveal" data-delay="40" open>
-          <summary>Is it difficult to install?</summary>
-          <p>No. Download the APK, allow app install permission once, and tap install. Most users finish in about 30 seconds.</p>
-        </details>
-        <details class="faq-item reveal" data-delay="70">
-          <summary>Will it work without creating an account?</summary>
-          <p>Yes. StopAlert works without account setup. You can install and start using it right away.</p>
-        </details>
-        <details class="faq-item reveal" data-delay="85">
-          <summary>Does it work without internet?</summary>
-          <p>Yes. Once you set a destination, tracking and alarms keep working offline. Map tiles show if they were already loaded.</p>
-        </details>
-        <details class="faq-item reveal" data-delay="100">
-          <summary>Why download now?</summary>
-          <p>If you regularly commute, this app can prevent missed stops from your very next trip with zero setup friction.</p>
-        </details>
-      </div>
-    </section>
+    <section id="faq" class="faq-section container"><div class="faq-heading"><p class="eyebrow">GOOD TO KNOW</p><h2>A few quick answers.</h2></div><div class="faq-list"><details class="faq-item" open><summary>Does StopAlert work without an account?</summary><p>Yes. Install the app and start using it without creating an account.</p></details><details class="faq-item"><summary>Will alerts work without internet?</summary><p>Yes. Once you set a destination, tracking and alarms keep working offline. Map tiles show if they were already loaded.</p></details><details class="faq-item"><summary>Will alarms ring when my screen is locked?</summary><p>Yes. StopAlert is designed to keep its reminders working when your phone is locked.</p></details><details class="faq-item"><summary>How do I install the Android app?</summary><p>Download the APK, allow your browser or file manager to install apps, then open the file and follow the prompts.</p></details></div></section>
   </main>
 
-  <div id="sticky-download" class="sticky-download" aria-hidden="true">
-    <div class="container sticky-shell">
-      <div class="sticky-copy">
-        <strong>Ready for safer rides?</strong>
-        <p>Install in minutes and start your next trip with confidence.</p>
-      </div>
-      <div class="sticky-actions">
-        <a class="button primary track-download" href="downloads/StopAlert-Premium-v1.0.0.apk" download>Download APK</a>
-        <span id="sticky-download-count" class="sticky-note">Downloads from this browser: 0</span>
-      </div>
-    </div>
-  </div>
+  <div id="sticky-download" class="sticky-download" aria-hidden="true"><div class="container sticky-shell"><div class="sticky-copy"><strong>STOPALERT</strong><span>Get the app</span></div><div class="sticky-actions"><a class="button primary track-download" href="downloads/StopAlert-v1.0.0.apk" download>Download <span aria-hidden="true">↗</span></a></div></div></div>
 
-  <footer class="site-footer reveal" data-delay="90">
-    <div class="container">
-      <p>© <span id="year"></span> StopAlert Premium. Built for safer commuting.</p>
-    </div>
-  </footer>
+  <footer class="site-footer"><div class="container footer-main"><div class="footer-brand"><a class="footer-logo" href="#top"><img src="assets/logo.png" alt="" /><span>STOPALERT<span class="brand-period">.</span></span></a><h2>NEVER MISS<br />YOUR STOP.</h2><p>StopAlert gives you the confidence to put your phone away and enjoy the ride.</p></div><div class="footer-navigation"><div class="footer-column"><h3>PRODUCT</h3><a href="#features">Features</a><a href="#how">The journey</a><a href="#download">Download</a></div><div class="footer-column"><h3>SUPPORT</h3><a href="#faq">FAQ</a><a href="#install">Install guide</a><a href="#faq">Offline use</a></div><p class="footer-status"><i></i> STOPALERT FOR ANDROID</p></div><div class="footer-watermark" aria-hidden="true">STOPALERT.</div></div><div class="container footer-bottom"><p>Never miss your stop again. <span>© <span id="year"></span> StopAlert</span></p><a href="#top">↑ BACK TO TOP</a></div></footer>
 
-  <script src="script.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/gsap.min.js" defer></script>
+  <script src="https://cdn.jsdelivr.net/npm/gsap@3.12.5/dist/ScrollTrigger.min.js" defer></script>
+  <script src="script.js" defer></script>
 </body>
 </html>
