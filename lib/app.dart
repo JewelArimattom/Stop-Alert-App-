@@ -8,7 +8,7 @@ class StopAlertApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'StopAlert Premium',
+      title: 'StopAlert',
       debugShowCheckedModeBanner: false,
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.lightTheme,

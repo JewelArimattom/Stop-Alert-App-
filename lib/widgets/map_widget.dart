@@ -57,15 +57,30 @@ class MapWidget extends StatelessWidget {
           minZoom: 3,
         ),
         children: [
-          // Modern CartoDB Voyager map tile layer — fast, free, no API key
-          TileLayer(
-            urlTemplate: MapboxService.tileUrlTemplate,
-            subdomains: MapboxService.tileSubdomains,
-            userAgentPackageName: 'com.stopalert.stop_alert',
-            maxZoom: 20,
-            errorTileCallback: (tile, error, stackTrace) {
-              debugPrint('TILE ERROR: $error (URL: ${tile.coordinates})');
-            },
+          // OpenStreetMap tiles are free to use without an API key.
+          ColorFiltered(
+            // Soften OSM's saturated road colors for a Google Maps-like palette.
+            colorFilter: const ColorFilter.matrix([
+              0.86, 0.27, 0.03, 0, 0,
+              0.08, 0.73, 0.03, 0, 0,
+              0.08, 0.27, 0.94, 0, 0,
+              0,    0,    0,    1, 0,
+            ]),
+            child: TileLayer(
+              urlTemplate: MapboxService.tileUrlTemplate,
+              subdomains: MapboxService.tileSubdomains,
+              userAgentPackageName: 'StopAlert/1.0',
+              maxZoom: 20,
+              errorTileCallback: (tile, error, stackTrace) {
+                debugPrint('TILE ERROR: $error (URL: ${tile.coordinates})');
+              },
+            ),
+          ),
+
+          // OpenStreetMap requires attribution to remain visible on the map.
+          SimpleAttributionWidget(
+            alignment: Alignment.bottomLeft,
+            source: const Text('OpenStreetMap contributors'),
           ),
 
           // Geofence circle with green glow

@@ -8,7 +8,7 @@ Static product website for the StopAlert Android app.
 - `styles.css` — responsive visual design and motion
 - `script.js` — route scene, scroll interactions, and page behavior
 - `assets/logo.png` — StopAlert logo
-- `downloads/StopAlert-v1.0.0.apk` — Android installer
+- `downloads/StopAlert-v1.0.1.apk` — Android installer
 
 ## Run locally
 

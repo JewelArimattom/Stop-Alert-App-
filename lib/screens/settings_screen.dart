@@ -635,7 +635,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           const SizedBox(height: 12),
           const Text(
-            'StopAlert Premium',
+            'StopAlert',
             style: TextStyle(
               fontSize: 18,
               fontWeight: FontWeight.w800,

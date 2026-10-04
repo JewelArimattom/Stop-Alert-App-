@@ -8,13 +8,12 @@ import 'package:latlong2/latlong.dart';
 class MapboxService {
   MapboxService._();
 
-  /// Free OpenStreetMap tile URL (OSM France community mirror).
-  /// No API key required, no watermarks, reliable CDN.
+  /// Standard OpenStreetMap raster tiles. No API key is required.
   static String get tileUrlTemplate =>
-      'https://{s}.tile.openstreetmap.fr/osmfr/{z}/{x}/{y}.png';
+      'https://tile.openstreetmap.org/{z}/{x}/{y}.png';
 
   /// Subdomains for tile load balancing
-  static List<String> get tileSubdomains => const ['a', 'b', 'c'];
+  static List<String> get tileSubdomains => const [];
 
   // ─── Directions API (OSRM – free, no key) ────────────────────────
 
